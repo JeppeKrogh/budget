@@ -4,7 +4,6 @@
 document.addEventListener('DOMContentLoaded', function () {
   const minimumBudget = 21104;
   const maximumSelf = 2500;
-  const minimumSaving = 0;
   const minimumFood = 4000;
   const minimumMubbi = 100;
   const idaIncomeInput = document.getElementById('idaIncome');
@@ -20,7 +19,7 @@ document.addEventListener('DOMContentLoaded', function () {
     calcButton.disabled = !(idaIncomeValue && jeppeIncomeValue);
   }
 
-  setPredefinedValues(minimumBudget, minimumFood, minimumMubbi, minimumSaving, maximumSelf);
+  setPredefinedValues(minimumBudget, minimumFood, minimumMubbi, maximumSelf);
 
   // Add event listeners to the input fields
   idaIncomeInput.addEventListener('input', checkInputs);
@@ -35,7 +34,7 @@ document.addEventListener('DOMContentLoaded', function () {
     const totalBudget = parseFloat(idaIncome) + parseFloat(jeppeIncome);
 
     let idaBudget = Math.round((idaIncome / totalBudget) * minimumBudget);
-    let idaSaving = Math.round((idaIncome / totalBudget) * minimumSaving);
+    let idaSaving = Math.round((idaIncome / totalBudget));
     let idaFood = Math.round((idaIncome / totalBudget) * minimumFood);
     let idaMubbi = Math.round((idaIncome / totalBudget) * minimumMubbi);
     let idaSelf = Math.round(idaIncome - idaBudget - idaSaving - idaFood - idaMubbi);
@@ -70,7 +69,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
 
     let jeppeBudget = Math.round((jeppeIncome / totalBudget) * minimumBudget);
-    let jeppeSaving = Math.round((jeppeIncome / totalBudget) * minimumSaving);
+    let jeppeSaving = Math.round((jeppeIncome / totalBudget));
     let jeppeFood = Math.round((jeppeIncome / totalBudget) * minimumFood);
     let jeppeMubbi = Math.round((jeppeIncome / totalBudget) * minimumMubbi);
     let jeppeSelf = Math.round(jeppeIncome - jeppeBudget - jeppeSaving - jeppeFood - jeppeMubbi);
