@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Budget</title>
+  <link rel="stylesheet" href="https://unpkg.com/@material-tailwind/html@latest/styles/material-tailwind.css" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/@material-tailwind/html@latest/scripts/ripple.js"></script>
+  <script src="budget.js"></script>
+</head>
+
+<body>
+
+  <div class="container flex flex-col lg:flex-row mx-0 mt-0 lg:mx-32 lg:mt-20">
+    <div class="flex flex-col w-72">
+      <!-- component -->
+      <div class="relative w-72">
+        <div class="mb-8 relative space-y-4">
+          <div class="bg-white rounded-lg flex items-center justify-between space-x-8">
+            <div class="flex-1 flex justify-between items-center">
+              <div class="flex p-1 content-center w-36 bg-gray-300 rounded"><span class="m-auto text-sm">Budget</span>
+              </div>
+              <div class="flex p-1 content-center w-24 rounded-lg bg-pink-300"><span id="minimumBudget"
+                  class="m-auto text-sm text-white"><span class="loader">👻</span></span></div>
+            </div>
+          </div>
+          <div class="bg-white rounded-lg flex items-center justify-between space-x-8">
+            <div class="flex-1 flex justify-between items-center">
+              <div class="flex p-1 content-center w-36 bg-gray-300 rounded"><span
+                  class="m-auto text-sm">Opsparing</span></div>
+              <div class="flex p-1 content-center w-24 rounded-lg bg-pink-300"><span id="minimumSaving"
+                  class="m-auto text-sm text-white"><span class="loader">👻</span></span></div>
+            </div>
+          </div>
+          <div class="bg-white rounded-lg flex items-center justify-between space-x-8">
+            <div class="flex-1 flex justify-between items-center">
+              <div class="flex p-1 content-center w-36 bg-gray-300 rounded"><span class="m-auto text-sm">Mad</span>
+              </div>
+              <div class="flex p-1 content-center w-24 rounded-lg bg-pink-300"><span id="minimumFood"
+                  class="m-auto text-sm text-white"><span class="loader">👻</span></span></div>
+            </div>
+          </div>
+          <div class="bg-white rounded-lg flex items-center justify-between space-x-8">
+            <div class="flex-1 flex justify-between items-center">
+              <div class="flex p-1 content-center w-36 bg-gray-300 rounded"><span class="m-auto text-sm">Mubbi</span>
+              </div>
+              <div class="flex p-1 content-center w-24 rounded-lg bg-pink-300"><span id="minimumMubbi"
+                  class="m-auto text-sm text-white"><span class="loader">👻</span></span></div>
+            </div>
+          </div>
+          <div class="bg-white rounded-lg flex items-center justify-between space-x-8">
+            <div class="flex-1 flex justify-between items-center">
+              <div class="flex p-1 content-center w-36 bg-gray-300 rounded"><span class="m-auto text-sm">Selv</span>
+              </div>
+              <div class="flex p-1 content-center w-24 rounded-lg bg-pink-300"><span id="maximumSelf"
+                  class="m-auto text-sm text-white"><span class="loader">👻</span></span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- component -->
+      <div class="flex w-72 flex-col gap-6">
+        <div class="relative h-10 w-full min-w-[200px]">
+          <input id="idaIncome"
+            class="peer h-full w-full rounded-[7px] border border-blue-gray-200 bg-transparent px-3 py-2.5 font-sans text-sm font-normal text-blue-gray-700 outline outline-0 transition-all placeholder-shown:border placeholder-shown:border-blue-gray-200 placeholder-shown:border-t-blue-gray-200 focus:border-2 focus:border-pink-500 focus:border-t-transparent focus:outline-0 disabled:border-0 disabled:bg-blue-gray-50"
+            placeholder=" " />
+          <label
+            class="before:content[' '] after:content[' '] pointer-events-none absolute left-0 -top-1.5 flex h-full w-full select-none text-[11px] font-normal leading-tight text-blue-gray-400 transition-all before:pointer-events-none before:mt-[6.5px] before:mr-1 before:box-border before:block before:h-1.5 before:w-2.5 before:rounded-tl-md before:border-t before:border-l before:border-blue-gray-200 before:transition-all after:pointer-events-none after:mt-[6.5px] after:ml-1 after:box-border after:block after:h-1.5 after:w-2.5 after:flex-grow after:rounded-tr-md after:border-t after:border-r after:border-blue-gray-200 after:transition-all peer-placeholder-shown:text-sm peer-placeholder-shown:leading-[3.75] peer-placeholder-shown:text-blue-gray-500 peer-placeholder-shown:before:border-transparent peer-placeholder-shown:after:border-transparent peer-focus:text-[11px] peer-focus:leading-tight peer-focus:text-pink-500 peer-focus:before:border-t-2 peer-focus:before:border-l-2 peer-focus:before:border-pink-500 peer-focus:after:border-t-2 peer-focus:after:border-r-2 peer-focus:after:border-pink-500 peer-disabled:text-transparent peer-disabled:before:border-transparent peer-disabled:after:border-transparent peer-disabled:peer-placeholder-shown:text-blue-gray-500">
+            Ida løn
+          </label>
+        </div>
+        <div class="relative h-10 w-full min-w-[200px]">
+          <input id="jeppeIncome"
+            class="peer h-full w-full rounded-[7px] border border-blue-gray-200 bg-transparent px-3 py-2.5 font-sans text-sm font-normal text-blue-gray-700 outline outline-0 transition-all placeholder-shown:border placeholder-shown:border-blue-gray-200 placeholder-shown:border-t-blue-gray-200 focus:border-2 focus:border-indigo-500 focus:border-t-transparent focus:outline-0 disabled:border-0 disabled:bg-blue-gray-50"
+            placeholder=" " />
+          <label
+            class="before:content[' '] after:content[' '] pointer-events-none absolute left-0 -top-1.5 flex h-full w-full select-none text-[11px] font-normal leading-tight text-blue-gray-400 transition-all before:pointer-events-none before:mt-[6.5px] before:mr-1 before:box-border before:block before:h-1.5 before:w-2.5 before:rounded-tl-md before:border-t before:border-l before:border-blue-gray-200 before:transition-all after:pointer-events-none after:mt-[6.5px] after:ml-1 after:box-border after:block after:h-1.5 after:w-2.5 after:flex-grow after:rounded-tr-md after:border-t after:border-r after:border-blue-gray-200 after:transition-all peer-placeholder-shown:text-sm peer-placeholder-shown:leading-[3.75] peer-placeholder-shown:text-blue-gray-500 peer-placeholder-shown:before:border-transparent peer-placeholder-shown:after:border-transparent peer-focus:text-[11px] peer-focus:leading-tight peer-focus:text-indigo-500 peer-focus:before:border-t-2 peer-focus:before:border-l-2 peer-focus:before:border-indigo-500 peer-focus:after:border-t-2 peer-focus:after:border-r-2 peer-focus:after:border-indigo-500 peer-disabled:text-transparent peer-disabled:before:border-transparent peer-disabled:after:border-transparent peer-disabled:peer-placeholder-shown:text-blue-gray-500">
+            Jeppe løn
+          </label>
+        </div>
+      </div>
+      <!-- component -->
+      <button id="calcButton" disabled
+        class="middle none center w-72 rounded-lg bg-emerald-300 py-3 px-6 font-sans text-xs font-bold uppercase text-white shadow-md shadow-pink-500/20 transition-all hover:shadow-lg hover:shadow-pink-500/40 focus:opacity-[0.85] focus:shadow-none active:opacity-[0.85] active:shadow-none disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none mt-3"
+        data-ripple-light="true">
+        Button
+      </button>
+    </div>
+    <div class="flex flex-col flex-auto w-72 lg:w-auto mb-24 lg:mb-0">
+      <div class="text-center">
+        <div id="idaContainer"
+          class="[&>div]:w-32 [&>div]:m-auto [&>div]:flex [&>div]:justify-between [&>h3]:p-1 [&>h3]:m-1 [&>h3]:mt-12 [&>h3]:lg:mt-1"></div>
+      </div>
+      <div class="text-center">
+        <div id="jeppeContainer"
+          class="[&>div]:w-32 [&>div]:m-auto [&>div]:flex [&>div]:justify-between [&>h3]:p-1 [&>h3]:m-1 [&>h3]:mt-20">
+        </div>
+      </div>
+
+      <div class="text-center">
+        <div id="totalContainer"
+          class="[&>div]:w-32 [&>div]:m-auto [&>div]:flex [&>div]:justify-between [&>h3]:p-1 [&>h3]:m-1 [&>h3]:mt-20">
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>
