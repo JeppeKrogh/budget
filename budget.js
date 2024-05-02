@@ -109,11 +109,10 @@ document.addEventListener('DOMContentLoaded', function () {
   function createHtmlElement(title, value) {
     return `<div><span>${title}</span><span>${value}</span></div>`;
   }
-  function setPredefinedValues(minimumBudget, minimumFood, minimumMubbi, minimumSaving, maximumSelf) {
+  function setPredefinedValues(minimumBudget, minimumFood, minimumMubbi, maximumSelf) {
     document.getElementById('minimumBudget').innerText = minimumBudget;
     document.getElementById('minimumFood').innerText = minimumFood;
     document.getElementById('minimumMubbi').innerText = minimumMubbi;
-    document.getElementById('minimumSaving').innerText = minimumSaving;
     document.getElementById('maximumSelf').innerText = maximumSelf;
   }
 });
