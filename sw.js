@@ -16,11 +16,22 @@ const OFFLINE_URLS = [
 // Install event to cache the required resources
 self.addEventListener("install", (event) => {
   event.waitUntil(
-    caches.open(CACHE_NAME).then((cache) => {
-      return cache.addAll(OFFLINE_URLS);
+    caches.open(CACHE_NAME).then(async (cache) => {
+      try {
+        const responses = await Promise.all(
+          OFFLINE_URLS.map((url) => fetch(url)),
+        );
+        const validResponses = responses.filter((response) => response.ok);
+
+        // Cache only valid responses
+        await cache.addAll(validResponses.map((response) => response.url));
+        console.log("All valid files cached successfully");
+      } catch (error) {
+        console.error("Failed to cache some files:", error);
+      }
     }),
   );
-  console.log("Service Worker Installed and Cached Offline Resources");
+  console.log("Service Worker Installed");
 });
 
 // Activate event to update the cache if needed
