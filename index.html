@@ -9,6 +9,8 @@
             rel="stylesheet"
             href="https://unpkg.com/@material-tailwind/html@latest/styles/material-tailwind.css"
         />
+        <link rel="manifest" href="manifest.json" />
+        <link rel="apple-touch-icon" href="icon-192.png" />
         <script src="https://cdn.tailwindcss.com"></script>
         <script src="https://unpkg.com/@material-tailwind/html@latest/scripts/ripple.js"></script>
         <script src="budget.js"></script>
@@ -198,5 +200,23 @@
                 </div>
             </div>
         </div>
+        <script>
+            if ("serviceWorker" in navigator) {
+                navigator.serviceWorker
+                    .register("sw.js")
+                    .then((registration) =>
+                        console.log(
+                            "Service Worker registered with scope:",
+                            registration.scope,
+                        ),
+                    )
+                    .catch((error) =>
+                        console.error(
+                            "Service Worker registration failed:",
+                            error,
+                        ),
+                    );
+            }
+        </script>
     </body>
 </html>
