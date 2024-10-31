@@ -1,5 +1,16 @@
 const CACHE_NAME = "offline-cache-v1";
-const OFFLINE_URLS = ["/", "/index.html", "/style.css", "/script.js"];
+const OFFLINE_URLS = [
+  "/",
+  "/index.html",
+  "/192x192.png",
+  "/512x512.png",
+  "/manifest.json",
+  "/tailwind.config.js",
+  "/assets/css/material-tailwind.css",
+  "/assets/js/budget.js",
+  "/assets/js/ripple.js",
+  "/assets/js/tw.js",
+];
 
 // Install event to cache the required resources
 self.addEventListener("install", (event) => {
