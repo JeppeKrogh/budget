@@ -62,8 +62,6 @@ document.addEventListener("DOMContentLoaded", function () {
     ${idaSelfHtml}
   `;
 
-    console.log(idaHtml);
-
     document.getElementById("idaContainer").innerHTML = idaHtml;
 
     let jeppeBudget = Math.round((jeppeIncome / totalBudget) * minimumBudget);
