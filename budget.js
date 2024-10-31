@@ -4,7 +4,7 @@
 document.addEventListener('DOMContentLoaded', function () {
   const minimumBudget = 21104;
   const maximumSelf = 2500;
-  const minimumFood = 4000;
+  const minimumFood = 4500;
   const minimumMubbi = 100;
   const idaIncomeInput = document.getElementById('idaIncome');
   const jeppeIncomeInput = document.getElementById('jeppeIncome');
@@ -121,4 +121,7 @@ CHANGELOG:
 1/11 2023:
 - Changed food from 3000 to 3500.
 - Added 100kr combined to børneopsparing.
+
+25/9 2024:
+- Changed food from 4000 to 4500.
 */
