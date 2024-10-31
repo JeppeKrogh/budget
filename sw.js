@@ -1,5 +1,6 @@
 const CACHE_NAME = "offline-cache-v1";
 const OFFLINE_URLS = [
+  "/",
   "/budget",
   "/budget/index.html",
   "/budget/192x192.png",
