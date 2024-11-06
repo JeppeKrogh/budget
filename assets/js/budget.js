@@ -1,5 +1,5 @@
 document.addEventListener("DOMContentLoaded", function () {
-  const minimumBudget = 21104;
+  const minimumBudget = 22104;
   const maximumSelf = 2500;
   const minimumFood = 4500;
   const minimumMubbi = 100;
