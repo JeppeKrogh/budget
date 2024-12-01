@@ -58,6 +58,6 @@ self.addEventListener("fetch", (event) => {
       .then((cachedResponse) => {
         return cachedResponse || fetch(event.request);
       })
-      .catch(() => caches.match("/index.html")),
+      .catch(() => caches.match("/budget")),
   );
 });
