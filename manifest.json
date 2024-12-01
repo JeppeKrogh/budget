@@ -2,7 +2,7 @@
   "name": "Budget jsapp",
   "short_name": "budget",
   "description": "budget app that works offline",
-  "start_url": "/",
+  "start_url": "/budget.html",
   "display": "standalone",
   "background_color": "#ffffff",
   "theme_color": "#f9a8d4",
