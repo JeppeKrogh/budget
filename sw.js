@@ -1,6 +1,7 @@
 const CACHE_NAME = "offline-cache-v1";
 const OFFLINE_URLS = [
   "/budget",
+  "/budget/favicon.ico",
   "/budget/index.html",
   "/budget/192x192.png",
   "/budget/512x512.png",
@@ -10,7 +11,6 @@ const OFFLINE_URLS = [
   "/budget/assets/js/budget.js",
   "/budget/assets/js/ripple.js",
   "/budget/assets/js/tw.js",
-  "/budget/offline.html", // Add an offline fallback page, if possible
 ];
 
 // Install event to cache the required resources
