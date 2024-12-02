@@ -55,7 +55,7 @@ self.addEventListener("fetch", (event) => {
       return fetch(event.request)
         .catch(() => {
           // If the network fails (e.g., offline), show fallback page or resource
-          return caches.match("/budget/offline.html");
+          return caches.match("/budget/index.html");
         });
     })
   );
