@@ -1,6 +1,5 @@
 const CACHE_NAME = "offline-cache-v1";
 const OFFLINE_URLS = [
-  "/",
   "/budget",
   "/budget/index.html",
   "/budget/192x192.png",
@@ -11,25 +10,17 @@ const OFFLINE_URLS = [
   "/budget/assets/js/budget.js",
   "/budget/assets/js/ripple.js",
   "/budget/assets/js/tw.js",
+  "/budget/offline.html", // Add an offline fallback page, if possible
 ];
 
 // Install event to cache the required resources
 self.addEventListener("install", (event) => {
   event.waitUntil(
-    caches.open(CACHE_NAME).then(async (cache) => {
-      try {
-        const responses = await Promise.all(
-          OFFLINE_URLS.map((url) => fetch(url)),
-        );
-        const validResponses = responses.filter((response) => response.ok);
-
-        // Cache only valid responses
-        await cache.addAll(validResponses.map((response) => response.url));
-        console.log("All valid files cached successfully");
-      } catch (error) {
-        console.error("Failed to cache some files:", error);
-      }
-    }),
+    caches.open(CACHE_NAME).then((cache) => {
+      return cache.addAll(OFFLINE_URLS).catch((error) => {
+        console.error("Failed to cache resources during install", error);
+      });
+    })
   );
   console.log("Service Worker Installed");
 });
@@ -41,11 +32,12 @@ self.addEventListener("activate", (event) => {
       return Promise.all(
         cacheNames.map((cacheName) => {
           if (cacheName !== CACHE_NAME) {
+            console.log(`Deleting old cache: ${cacheName}`);
             return caches.delete(cacheName);
           }
-        }),
+        })
       );
-    }),
+    })
   );
   console.log("Service Worker Activated");
 });
@@ -53,11 +45,18 @@ self.addEventListener("activate", (event) => {
 // Fetch event to serve cached resources when offline
 self.addEventListener("fetch", (event) => {
   event.respondWith(
-    caches
-      .match(event.request)
-      .then((cachedResponse) => {
-        return cachedResponse || fetch(event.request);
-      })
-      .catch(() => caches.match("/budget")),
+    caches.match(event.request).then((cachedResponse) => {
+      // If we have a cached response, return it
+      if (cachedResponse) {
+        return cachedResponse;
+      }
+
+      // If there's no cached response, try to fetch from the network
+      return fetch(event.request)
+        .catch(() => {
+          // If the network fails (e.g., offline), show fallback page or resource
+          return caches.match("/budget/offline.html");
+        });
+    })
   );
 });
