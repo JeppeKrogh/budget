@@ -6,7 +6,7 @@
         <meta http-equiv="X-UA-Compatible" content="ie=edge" />
         <title>Budget</title>
         <link rel="stylesheet" href="assets/css/material-tailwind.css" />
-        <link rel="manifest" href="manifest.json" />
+        <link rel="manifest" href="/budget/manifest.json" />
         <link rel="apple-touch-icon" href="icon-192.png" />
         <script src="assets/js/tw.js"></script>
         <script src="assets/js/ripple.js"></script>
@@ -201,7 +201,7 @@
         <script>
             if ("serviceWorker" in navigator) {
                 navigator.serviceWorker
-                    .register("sw.js")
+                    .register("/budget/sw.js")
                     .then((registration) =>
                         console.log(
                             "Service Worker registered with scope:",
