@@ -1,6 +1,6 @@
 document.addEventListener("DOMContentLoaded", function () {
   const minimumBudget = 22104;
-  const maximumSelf = 2500;
+  const maximumSelf = 2000;
   const minimumFood = 4500;
   const minimumMubbi = 100;
   const idaIncomeInput = document.getElementById("idaIncome");
