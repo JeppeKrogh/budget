@@ -65,7 +65,7 @@ document.addEventListener("DOMContentLoaded", function () {
     const idaBackupHtml = createHtmlElement("Opsparing", idaBackup);
     const idaFoodHtml = createHtmlElement("Mad", idaFood);
     const idaMubbiHtml = createHtmlElement("Mubbi", idaMubbi);
-    const idaHouseHtml = createHtmlElement("House", idaHouse);
+    const idaHouseHtml = createHtmlElement("Hus", idaHouse);
     const idaLeftHtml = createHtmlElement("Selv", idaLeft);
 
     const idaHtml = `
@@ -97,7 +97,7 @@ document.addEventListener("DOMContentLoaded", function () {
     const jeppeBackupHtml = createHtmlElement("Opsparing", jeppeBackup);
     const jeppeFoodHtml = createHtmlElement("Mad", jeppeFood);
     const jeppeMubbiHtml = createHtmlElement("Mubbi", jeppeMubbi);
-    const jeppeHouseHtml = createHtmlElement("House", jeppeHouse);
+    const jeppeHouseHtml = createHtmlElement("Hus", jeppeHouse);
     const jeppeLeftHtml = createHtmlElement("Selv", jeppeLeft);
 
     const jeppeHtml = `
