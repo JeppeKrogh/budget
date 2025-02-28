@@ -57,7 +57,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
     let idaAmountAbove = idaLeft - maximumSelf;
     idaLeft = idaLeft - idaAmountAbove;
-    idaHouse = idaAmountAbove;
+    idaHouse = idaLeft;
 
     idaContainer.innerHTML = "";
 
@@ -91,7 +91,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
     let jeppeAmountAbove = jeppeLeft - maximumSelf;
     jeppeLeft = jeppeLeft - jeppeAmountAbove;
-    jeppeHouse = jeppeAmountAbove;
+    jeppeHouse = jeppeLeft;
 
     const jeppeBudgetHtml = createHtmlElement("Budget", jeppeBudget);
     const jeppeBackupHtml = createHtmlElement("Opsparing", jeppeBackup);
