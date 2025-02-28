@@ -56,8 +56,9 @@ document.addEventListener("DOMContentLoaded", function () {
     );
 
     let idaAmountAbove = idaLeft - maximumSelf;
+    
     idaLeft = idaLeft - idaAmountAbove;
-    idaHouse = idaLeft;
+    idaHouse = idaAmountAbove;
 
     idaContainer.innerHTML = "";
 
@@ -86,12 +87,13 @@ document.addEventListener("DOMContentLoaded", function () {
     let jeppeMubbi = Math.round((jeppeIncome / totalBudget) * minimumMubbi);
     let jeppeBackup = Math.round((jeppeIncome / totalBudget) * backupDiff);
     let jeppeLeft = Math.round(
-      jeppeIncome - jeppeBudget - jeppeSaving - jeppeFood - jeppeMubbi,
+      jeppeIncome - jeppeBudget - jeppeSaving - jeppeFood - jeppeMubbi - jeppeBackup,
     );
 
     let jeppeAmountAbove = jeppeLeft - maximumSelf;
+
     jeppeLeft = jeppeLeft - jeppeAmountAbove;
-    jeppeHouse = jeppeLeft;
+    jeppeHouse = jeppeAmountAbove;
 
     const jeppeBudgetHtml = createHtmlElement("Budget", jeppeBudget);
     const jeppeBackupHtml = createHtmlElement("Opsparing", jeppeBackup);
