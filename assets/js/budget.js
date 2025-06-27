@@ -9,13 +9,11 @@ document.addEventListener("DOMContentLoaded", function () {
   const currentBackupInput = document.getElementById("currentBackup");
   const calcButton = document.getElementById("calcButton");
 
-  // Function to check if both input fields have values
   function checkInputs() {
     const idaIncomeValue = idaIncomeInput.value.trim();
     const jeppeIncomeValue = jeppeIncomeInput.value.trim();
     const currentBackupValue = currentBackupInput.value.trim();
 
-    // Enable the button if both input fields have values, otherwise disable it
     calcButton.disabled = !(
         idaIncomeValue &&
         jeppeIncomeValue &&
@@ -31,7 +29,6 @@ document.addEventListener("DOMContentLoaded", function () {
       minimumBackup,
   );
 
-  // Add event listeners to the input fields
   idaIncomeInput.addEventListener("input", checkInputs);
   jeppeIncomeInput.addEventListener("input", checkInputs);
   currentBackupInput.addEventListener("input", checkInputs);
@@ -40,89 +37,99 @@ document.addEventListener("DOMContentLoaded", function () {
   function calculateTransfers() {
     const idaContainer = document.getElementById("idaContainer");
     const idaIncome = parseFloat(document.getElementById("idaIncome").value);
-    const jeppeIncome = parseFloat(
-        document.getElementById("jeppeIncome").value,
-    );
+    const jeppeIncome = parseFloat(document.getElementById("jeppeIncome").value);
     const totalBudget = parseFloat(idaIncome) + parseFloat(jeppeIncome);
-    const backupDiff =
-        parseFloat(minimumBackup) - parseFloat(currentBackupInput.value.trim());
+    const currentBackup = parseFloat(currentBackupInput.value.trim());
+    const backupNeeded = Math.max(0, minimumBackup - currentBackup);
+    const totalIncome = idaIncome + jeppeIncome;
 
+    // Calculate Ida's portions
     let idaBudget = Math.round((idaIncome / totalBudget) * minimumBudget);
     let idaFood = Math.round((idaIncome / totalBudget) * minimumFood);
     let idaMubbi = Math.round((idaIncome / totalBudget) * minimumMubbi);
-    let idaBackup = Math.round((idaIncome / totalBudget) * backupDiff);
-    let idaLeft = Math.round(
-        idaIncome - idaBudget - idaFood - idaMubbi - idaBackup,
-    );
+    let idaLeft = Math.round(idaIncome - idaBudget - idaFood - idaMubbi);
 
-    let idaAmountAbove = idaLeft - maximumSelf;
+    // Priority 1: Self amount (up to maximum)
+    let idaSelf = Math.min(idaLeft, maximumSelf);
+    idaLeft -= idaSelf;
 
-    idaLeft = idaLeft - idaAmountAbove;
-    let idaHouse = idaAmountAbove < 0 ? 0 : idaAmountAbove;
+    // Priority 2: Calculate portion of backup needed
+    let idaBackup = 0;
+    let idaHouse = 0;
 
-    idaContainer.innerHTML = "";
+    if (idaLeft > 0) {
+      let idaBackupPortion = Math.round((idaIncome / totalIncome) * backupNeeded);
+      idaBackup = Math.min(idaLeft, idaBackupPortion);
+      idaHouse = idaLeft - idaBackup;
+    }
 
     const idaBudgetHtml = createHtmlElement("Budget", idaBudget);
     const idaBackupHtml = createHtmlElement("Opsparing", idaBackup);
     const idaFoodHtml = createHtmlElement("Mad", idaFood);
     const idaMubbiHtml = createHtmlElement("Mubbi", idaMubbi);
     const idaHouseHtml = createHtmlElement("Hus", idaHouse);
-    const idaLeftHtml = createHtmlElement("Selv", idaLeft);
+    const idaLeftHtml = createHtmlElement("Selv", idaSelf);
 
     document.getElementById("idaContainer").innerHTML = `
-    <h3><b>👸</b></h3>
-    ${idaBudgetHtml}
-    ${idaBackupHtml}
-    ${idaFoodHtml}
-    ${idaMubbiHtml}
-    ${idaHouseHtml}
-    ${idaLeftHtml}
-  `;
+            <h3><b>👸</b></h3>
+            ${idaBudgetHtml}
+            ${idaBackupHtml}
+            ${idaFoodHtml}
+            ${idaMubbiHtml}
+            ${idaHouseHtml}
+            ${idaLeftHtml}
+        `;
 
+    // Calculate Jeppe's portions
     let jeppeBudget = Math.round((jeppeIncome / totalBudget) * minimumBudget);
-    let jeppeSaving = Math.round(jeppeIncome / totalBudget);
     let jeppeFood = Math.round((jeppeIncome / totalBudget) * minimumFood);
     let jeppeMubbi = Math.round((jeppeIncome / totalBudget) * minimumMubbi);
-    let jeppeBackup = Math.round((jeppeIncome / totalBudget) * backupDiff);
-    let jeppeLeft = Math.round(
-        jeppeIncome - jeppeBudget - jeppeSaving - jeppeFood - jeppeMubbi - jeppeBackup,
-    );
+    let jeppeLeft = Math.round(jeppeIncome - jeppeBudget - jeppeFood - jeppeMubbi);
 
-    let jeppeAmountAbove = jeppeLeft - maximumSelf;
+    // Priority 1: Self amount (up to maximum)
+    let jeppeSelf = Math.min(jeppeLeft, maximumSelf);
+    jeppeLeft -= jeppeSelf;
 
-    jeppeLeft = jeppeLeft - jeppeAmountAbove;
-    let jeppeHouse = jeppeAmountAbove < 0 ? 0 : jeppeAmountAbove;
+    // Priority 2: Calculate portion of backup needed
+    let jeppeBackup = 0;
+    let jeppeHouse = 0;
+
+    if (jeppeLeft > 0) {
+      let jeppeBackupPortion = Math.round((jeppeIncome / totalIncome) * backupNeeded);
+      jeppeBackup = Math.min(jeppeLeft, jeppeBackupPortion);
+      jeppeHouse = jeppeLeft - jeppeBackup;
+    }
 
     const jeppeBudgetHtml = createHtmlElement("Budget", jeppeBudget);
     const jeppeBackupHtml = createHtmlElement("Opsparing", jeppeBackup);
     const jeppeFoodHtml = createHtmlElement("Mad", jeppeFood);
     const jeppeMubbiHtml = createHtmlElement("Mubbi", jeppeMubbi);
     const jeppeHouseHtml = createHtmlElement("Hus", jeppeHouse);
-    const jeppeLeftHtml = createHtmlElement("Selv", jeppeLeft);
+    const jeppeLeftHtml = createHtmlElement("Selv", jeppeSelf);
 
-    const jeppeHtml = `
-    <h3><b>🤴</b></h3>
-    ${jeppeBudgetHtml}
-    ${jeppeBackupHtml}
-    ${jeppeFoodHtml}
-    ${jeppeMubbiHtml}
-    ${jeppeHouseHtml}
-    ${jeppeLeftHtml}
-  `;
-
-    document.getElementById("jeppeContainer").innerHTML = jeppeHtml;
+    document.getElementById("jeppeContainer").innerHTML = `
+            <h3><b>🤴</b></h3>
+            ${jeppeBudgetHtml}
+            ${jeppeBackupHtml}
+            ${jeppeFoodHtml}
+            ${jeppeMubbiHtml}
+            ${jeppeHouseHtml}
+            ${jeppeLeftHtml}
+        `;
 
     let totalHouse = idaHouse + jeppeHouse;
     const totalHouseHtml = createHtmlElement("Hus", totalHouse);
 
     document.getElementById("totalContainer").innerHTML = `
-    <h3><b>Samlet</b></h3>
-    ${totalHouseHtml}
-    `;
+            <h3><b>Samlet</b></h3>
+            ${totalHouseHtml}
+        `;
   }
+
   function createHtmlElement(title, value) {
     return `<div><span>${title}</span><span>${value}</span></div>`;
   }
+
   function setPredefinedValues(
       minimumBudget,
       minimumFood,
@@ -137,12 +144,3 @@ document.addEventListener("DOMContentLoaded", function () {
     document.getElementById("minimumBackup").innerText = minimumBackup;
   }
 });
-/*
-CHANGELOG:
-1/11 2023:
-- Changed food from 3000 to 3500.
-- Added 100kr combined to børneopsparing.
-
-25/9 2024:
-- Changed food from 4000 to 4500.
-*/
