@@ -58,7 +58,7 @@ document.addEventListener("DOMContentLoaded", function () {
     let idaAmountAbove = idaLeft - maximumSelf;
 
     idaLeft = idaLeft - idaAmountAbove;
-    idaHouse = idaAmountAbove;
+    let idaHouse = idaAmountAbove < 0 ? 0 : idaAmountAbove;
 
     idaContainer.innerHTML = "";
 
@@ -69,7 +69,7 @@ document.addEventListener("DOMContentLoaded", function () {
     const idaHouseHtml = createHtmlElement("Hus", idaHouse);
     const idaLeftHtml = createHtmlElement("Selv", idaLeft);
 
-    const idaHtml = `
+    document.getElementById("idaContainer").innerHTML = `
     <h3><b>👸</b></h3>
     ${idaBudgetHtml}
     ${idaBackupHtml}
@@ -78,8 +78,6 @@ document.addEventListener("DOMContentLoaded", function () {
     ${idaHouseHtml}
     ${idaLeftHtml}
   `;
-
-    document.getElementById("idaContainer").innerHTML = idaHtml;
 
     let jeppeBudget = Math.round((jeppeIncome / totalBudget) * minimumBudget);
     let jeppeSaving = Math.round(jeppeIncome / totalBudget);
@@ -93,7 +91,7 @@ document.addEventListener("DOMContentLoaded", function () {
     let jeppeAmountAbove = jeppeLeft - maximumSelf;
 
     jeppeLeft = jeppeLeft - jeppeAmountAbove;
-    jeppeHouse = jeppeAmountAbove;
+    let jeppeHouse = jeppeAmountAbove < 0 ? 0 : jeppeAmountAbove;
 
     const jeppeBudgetHtml = createHtmlElement("Budget", jeppeBudget);
     const jeppeBackupHtml = createHtmlElement("Opsparing", jeppeBackup);
@@ -117,11 +115,10 @@ document.addEventListener("DOMContentLoaded", function () {
     let totalHouse = idaHouse + jeppeHouse;
     const totalHouseHtml = createHtmlElement("Hus", totalHouse);
 
-    const totalHtml = `
+    document.getElementById("totalContainer").innerHTML = `
     <h3><b>Samlet</b></h3>
     ${totalHouseHtml}
     `;
-    document.getElementById("totalContainer").innerHTML = totalHtml;
   }
   function createHtmlElement(title, value) {
     return `<div><span>${title}</span><span>${value}</span></div>`;
