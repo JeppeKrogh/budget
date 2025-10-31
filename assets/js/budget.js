@@ -3,7 +3,7 @@ document.addEventListener("DOMContentLoaded", function () {
   const maximumSelf = 2000;
   const minimumFood = 4500;
   const minimumMubbi = 100;
-  const minimumHouse = 5000;
+  const minimumHouse = 7000;
   const idaIncomeInput = document.getElementById("idaIncome");
   const jeppeIncomeInput = document.getElementById("jeppeIncome");
   const calcButton = document.getElementById("calcButton");
