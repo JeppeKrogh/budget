@@ -52,6 +52,7 @@ document.addEventListener("DOMContentLoaded", function () {
       ${createHtmlElement("Mad", idaFood)}
       ${createHtmlElement("Mubbi", idaMubbi)}
       ${createHtmlElement("Selv", idaLeft)}
+      ${createHtmlElement("Forbrug", idaRest)}
     `;
     document.getElementById("idaContainer").innerHTML = idaHtml;
 
@@ -76,6 +77,7 @@ document.addEventListener("DOMContentLoaded", function () {
       ${createHtmlElement("Mad", jeppeFood)}
       ${createHtmlElement("Mubbi", jeppeMubbi)}
       ${createHtmlElement("Selv", jeppeLeft)}
+      ${createHtmlElement("Forbrug", jeppeRest)}
     `;
     document.getElementById("jeppeContainer").innerHTML = jeppeHtml;
 
