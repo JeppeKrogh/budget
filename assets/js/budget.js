@@ -207,7 +207,9 @@ document.addEventListener("DOMContentLoaded", function () {
 
     canvas.toBlob(async (blob) => {
       const file = new File([blob], "budget.png", { type: "image/png" });
+      const isTouch = window.matchMedia("(pointer: coarse)").matches;
       if (
+        isTouch &&
         navigator.canShare &&
         navigator.canShare({ files: [file] })
       ) {

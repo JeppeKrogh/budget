@@ -1,4 +1,4 @@
-const CACHE_NAME = "offline-cache-v4";
+const CACHE_NAME = "offline-cache-v5";
 const OFFLINE_URLS = [
     "/budget/", // Base path for GitHub Pages
     "/budget/favicon.ico",
