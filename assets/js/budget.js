@@ -205,7 +205,19 @@ document.addEventListener("DOMContentLoaded", function () {
       y += sectionGap;
     });
 
-    canvas.toBlob((blob) => {
+    canvas.toBlob(async (blob) => {
+      const file = new File([blob], "budget.png", { type: "image/png" });
+      if (
+        navigator.canShare &&
+        navigator.canShare({ files: [file] })
+      ) {
+        try {
+          await navigator.share({ files: [file], title: "Budget" });
+          return;
+        } catch (err) {
+          if (err && err.name === "AbortError") return;
+        }
+      }
       const url = URL.createObjectURL(blob);
       const link = document.createElement("a");
       link.href = url;
