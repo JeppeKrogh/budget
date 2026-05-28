@@ -1,12 +1,16 @@
 document.addEventListener("DOMContentLoaded", function () {
   const minimumBudget = 25000;
   const maximumSelf = 2000;
-  const minimumFood = 4500;
-  const minimumMubbi = 100;
+  const minimumFood = 5000;
+  const minimumMubbiRo = 100;
+  const minimumMubbiMy = 100;
   const minimumHouse = 7000;
   const idaIncomeInput = document.getElementById("idaIncome");
   const jeppeIncomeInput = document.getElementById("jeppeIncome");
   const calcButton = document.getElementById("calcButton");
+  const downloadButton = document.getElementById("downloadButton");
+
+  let lastResult = null;
 
   function checkInputs() {
     calcButton.disabled = !(
@@ -17,7 +21,8 @@ document.addEventListener("DOMContentLoaded", function () {
   setPredefinedValues(
     minimumBudget,
     minimumFood,
-    minimumMubbi,
+    minimumMubbiRo,
+    minimumMubbiMy,
     maximumSelf,
     minimumHouse,
   );
@@ -25,6 +30,7 @@ document.addEventListener("DOMContentLoaded", function () {
   idaIncomeInput.addEventListener("input", checkInputs);
   jeppeIncomeInput.addEventListener("input", checkInputs);
   calcButton.addEventListener("click", calculateTransfers);
+  downloadButton.addEventListener("click", downloadImage);
 
   function calculateTransfers() {
     const idaIncome = parseFloat(idaIncomeInput.value);
@@ -34,62 +40,90 @@ document.addEventListener("DOMContentLoaded", function () {
     // ========== IDA ==========
     let idaBudget = Math.round((idaIncome / totalBudget) * minimumBudget);
     let idaFood = Math.round((idaIncome / totalBudget) * minimumFood);
-    let idaMubbi = Math.round((idaIncome / totalBudget) * minimumMubbi);
+    let idaMubbiRo = Math.round((idaIncome / totalBudget) * minimumMubbiRo);
+    let idaMubbiMy = Math.round((idaIncome / totalBudget) * minimumMubbiMy);
     let idaHus = Math.round((idaIncome / totalBudget) * minimumHouse);
 
     let idaLeft = Math.round(
-      idaIncome - idaBudget - idaFood - idaMubbi - idaHus,
+      idaIncome - idaBudget - idaFood - idaMubbiRo - idaMubbiMy - idaHus,
     );
 
     let idaAmountAbove = idaLeft - maximumSelf;
     idaLeft = idaLeft - idaAmountAbove;
     let idaRest = Math.max(idaAmountAbove, 0);
 
+    const idaRows = [
+      ["Budget", idaBudget],
+      ["Hus", idaHus],
+      ["Mad", idaFood],
+      ["Børneopsparing 1", idaMubbiRo],
+      ["Børneopsparing 2", idaMubbiMy],
+      ["Selv", idaLeft],
+      ["Forbrug", idaRest],
+    ];
+
     const idaHtml = `
       <h3><b>👸</b></h3>
-      ${createHtmlElement("Budget", idaBudget)}
-      ${createHtmlElement("Hus", idaHus)}
-      ${createHtmlElement("Mad", idaFood)}
-      ${createHtmlElement("Mubbi", idaMubbi)}
-      ${createHtmlElement("Selv", idaLeft)}
-      ${createHtmlElement("Forbrug", idaRest)}
+      ${idaRows.map(([t, v]) => createHtmlElement(t, v)).join("")}
     `;
     document.getElementById("idaContainer").innerHTML = idaHtml;
 
     // ========== JEPPE ==========
     let jeppeBudget = Math.round((jeppeIncome / totalBudget) * minimumBudget);
     let jeppeFood = Math.round((jeppeIncome / totalBudget) * minimumFood);
-    let jeppeMubbi = Math.round((jeppeIncome / totalBudget) * minimumMubbi);
+    let jeppeMubbiRo = Math.round(
+      (jeppeIncome / totalBudget) * minimumMubbiRo,
+    );
+    let jeppeMubbiMy = Math.round(
+      (jeppeIncome / totalBudget) * minimumMubbiMy,
+    );
     let jeppeHus = Math.round((jeppeIncome / totalBudget) * minimumHouse);
 
     let jeppeLeft = Math.round(
-      jeppeIncome - jeppeBudget - jeppeFood - jeppeMubbi - jeppeHus,
+      jeppeIncome -
+        jeppeBudget -
+        jeppeFood -
+        jeppeMubbiRo -
+        jeppeMubbiMy -
+        jeppeHus,
     );
 
     let jeppeAmountAbove = jeppeLeft - maximumSelf;
     jeppeLeft = jeppeLeft - jeppeAmountAbove;
     let jeppeRest = Math.max(jeppeAmountAbove, 0);
 
+    const jeppeRows = [
+      ["Budget", jeppeBudget],
+      ["Hus", jeppeHus],
+      ["Mad", jeppeFood],
+      ["Børneopsparing 1", jeppeMubbiRo],
+      ["Børneopsparing 2", jeppeMubbiMy],
+      ["Selv", jeppeLeft],
+      ["Forbrug", jeppeRest],
+    ];
+
     const jeppeHtml = `
       <h3><b>🤴</b></h3>
-      ${createHtmlElement("Budget", jeppeBudget)}
-      ${createHtmlElement("Hus", jeppeHus)}
-      ${createHtmlElement("Mad", jeppeFood)}
-      ${createHtmlElement("Mubbi", jeppeMubbi)}
-      ${createHtmlElement("Selv", jeppeLeft)}
-      ${createHtmlElement("Forbrug", jeppeRest)}
+      ${jeppeRows.map(([t, v]) => createHtmlElement(t, v)).join("")}
     `;
     document.getElementById("jeppeContainer").innerHTML = jeppeHtml;
 
     // ========== TOTAL ==========
-    let totalHus = idaHus + jeppeHus;
     let totalRest = idaRest + jeppeRest;
+    const totalRows = [["Rest", totalRest]];
 
     const totalHtml = `
       <h3><b>Samlet</b></h3>
-      ${createHtmlElement("Rest", totalRest)}
+      ${totalRows.map(([t, v]) => createHtmlElement(t, v)).join("")}
     `;
     document.getElementById("totalContainer").innerHTML = totalHtml;
+
+    lastResult = {
+      ida: { emoji: "👸", rows: idaRows },
+      jeppe: { emoji: "🤴", rows: jeppeRows },
+      total: { title: "Samlet", rows: totalRows },
+    };
+    downloadButton.classList.remove("hidden");
   }
 
   function createHtmlElement(title, value) {
@@ -99,14 +133,87 @@ document.addEventListener("DOMContentLoaded", function () {
   function setPredefinedValues(
     minimumBudget,
     minimumFood,
-    minimumMubbi,
+    minimumMubbiRo,
+    minimumMubbiMy,
     maximumSelf,
     minimumBackup,
   ) {
     document.getElementById("minimumBudget").innerText = minimumBudget;
     document.getElementById("minimumFood").innerText = minimumFood;
-    document.getElementById("minimumMubbi").innerText = minimumMubbi;
+    document.getElementById("minimumMubbiRo").innerText = minimumMubbiRo;
+    document.getElementById("minimumMubbiMy").innerText = minimumMubbiMy;
     document.getElementById("maximumSelf").innerText = maximumSelf;
     document.getElementById("minimumBackup").innerText = minimumBackup;
+  }
+
+  function downloadImage() {
+    if (!lastResult) return;
+
+    const scale = 2;
+    const padding = 60;
+    const lineHeight = 56;
+    const headerHeight = 70;
+    const sectionGap = 70;
+    const labelFont = "32px -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif";
+    const headerFont = "bold 36px -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif";
+    const emojiFont = "44px -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif";
+    const blockWidth = 360;
+
+    const sections = [lastResult.ida, lastResult.jeppe, lastResult.total];
+    let contentHeight = 0;
+    sections.forEach((s) => {
+      contentHeight += headerHeight + s.rows.length * lineHeight + sectionGap;
+    });
+    contentHeight -= sectionGap;
+
+    const width = padding * 2 + blockWidth;
+    const height = padding * 2 + contentHeight;
+
+    const canvas = document.createElement("canvas");
+    canvas.width = width * scale;
+    canvas.height = height * scale;
+    const ctx = canvas.getContext("2d");
+    ctx.scale(scale, scale);
+
+    ctx.fillStyle = "#ffffff";
+    ctx.fillRect(0, 0, width, height);
+
+    ctx.fillStyle = "#000000";
+    ctx.textBaseline = "middle";
+
+    const blockLeft = padding;
+    const blockRight = padding + blockWidth;
+    let y = padding;
+
+    sections.forEach((section) => {
+      const header = section.emoji || section.title;
+      const isEmoji = !!section.emoji;
+      ctx.font = isEmoji ? emojiFont : headerFont;
+      ctx.textAlign = "center";
+      ctx.fillText(header, blockLeft + blockWidth / 2, y + headerHeight / 2);
+      y += headerHeight;
+
+      ctx.font = labelFont;
+      section.rows.forEach(([label, value]) => {
+        ctx.textAlign = "left";
+        ctx.fillText(label, blockLeft, y + lineHeight / 2);
+        ctx.textAlign = "right";
+        ctx.fillText(String(value), blockRight, y + lineHeight / 2);
+        y += lineHeight;
+      });
+
+      y += sectionGap;
+    });
+
+    canvas.toBlob((blob) => {
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.href = url;
+      link.download = "budget.png";
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      URL.revokeObjectURL(url);
+    }, "image/png");
   }
 });
