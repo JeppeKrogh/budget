@@ -126,8 +126,12 @@ document.addEventListener("DOMContentLoaded", function () {
     downloadButton.classList.remove("hidden");
   }
 
+  function formatNumber(value) {
+    return Number(value).toLocaleString("da-DK");
+  }
+
   function createHtmlElement(title, value) {
-    return `<div><span>${title}</span><span>${value}</span></div>`;
+    return `<div><span>${title}</span><span>${formatNumber(value)}</span></div>`;
   }
 
   function setPredefinedValues(
@@ -138,12 +142,12 @@ document.addEventListener("DOMContentLoaded", function () {
     maximumSelf,
     minimumBackup,
   ) {
-    document.getElementById("minimumBudget").innerText = minimumBudget;
-    document.getElementById("minimumFood").innerText = minimumFood;
-    document.getElementById("minimumMubbiRo").innerText = minimumMubbiRo;
-    document.getElementById("minimumMubbiMy").innerText = minimumMubbiMy;
-    document.getElementById("maximumSelf").innerText = maximumSelf;
-    document.getElementById("minimumBackup").innerText = minimumBackup;
+    document.getElementById("minimumBudget").innerText = formatNumber(minimumBudget);
+    document.getElementById("minimumFood").innerText = formatNumber(minimumFood);
+    document.getElementById("minimumMubbiRo").innerText = formatNumber(minimumMubbiRo);
+    document.getElementById("minimumMubbiMy").innerText = formatNumber(minimumMubbiMy);
+    document.getElementById("maximumSelf").innerText = formatNumber(maximumSelf);
+    document.getElementById("minimumBackup").innerText = formatNumber(minimumBackup);
   }
 
   function downloadImage() {
@@ -198,7 +202,7 @@ document.addEventListener("DOMContentLoaded", function () {
         ctx.textAlign = "left";
         ctx.fillText(label, blockLeft, y + lineHeight / 2);
         ctx.textAlign = "right";
-        ctx.fillText(String(value), blockRight, y + lineHeight / 2);
+        ctx.fillText(formatNumber(value), blockRight, y + lineHeight / 2);
         y += lineHeight;
       });
 
