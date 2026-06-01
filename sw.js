@@ -1,6 +1,6 @@
-const CACHE_NAME = "offline-cache-v6";
+const CACHE_NAME = "offline-cache-v7";
 const OFFLINE_URLS = [
-    "/budget/", // Base path for GitHub Pages
+    "/budget/",
     "/budget/favicon.ico",
     "/budget/index.html",
     "/budget/192x192.png",
@@ -12,55 +12,49 @@ const OFFLINE_URLS = [
     "/budget/assets/js/tw.js",
 ];
 
-// Install event to cache the required resources
 self.addEventListener("install", (event) => {
-    console.log("Service Worker installing...");
+    self.skipWaiting();
     event.waitUntil(
-        caches.open(CACHE_NAME).then((cache) => {
-            return cache.addAll(OFFLINE_URLS).catch((error) => {
-                console.error("Failed to cache resources during install:", error);
-                throw error; // Rethrow the error to stop the service worker from installing
-            });
-        })
+        caches.open(CACHE_NAME).then((cache) => cache.addAll(OFFLINE_URLS))
     );
 });
 
-// Activate event to remove outdated caches
 self.addEventListener("activate", (event) => {
-    console.log("Service Worker activating...");
     event.waitUntil(
-        caches.keys().then((cacheNames) => {
-            return Promise.all(
-                cacheNames.map((cacheName) => {
-                    if (cacheName !== CACHE_NAME) {
-                        console.log("Deleting old cache:", cacheName);
-                        return caches.delete(cacheName);
-                    }
-                })
-            );
-        })
+        Promise.all([
+            caches.keys().then((names) =>
+                Promise.all(
+                    names.map(
+                        (name) => name !== CACHE_NAME && caches.delete(name)
+                    )
+                )
+            ),
+            self.clients.claim(),
+        ])
     );
 });
 
-// Fetch event to serve cached resources or fallback
 self.addEventListener("fetch", (event) => {
-    console.log("Fetch event for:", event.request.url);
+    if (event.request.method !== "GET") return;
 
     event.respondWith(
-        caches.match(event.request).then((cachedResponse) => {
-            if (cachedResponse) {
-                console.log("Cache hit for:", event.request.url);
-                return cachedResponse;
-            }
-
-            console.log("Cache miss; attempting fetch from network.");
-            return fetch(event.request).catch(() => {
-                console.warn("Fetch failed; returning offline fallback.");
-                if (event.request.mode === "navigate") {
-                    // If it's a navigation request, return the cached index.html for offline fallback
-                    return caches.match("/budget/index.html");
+        fetch(event.request)
+            .then((response) => {
+                if (response && response.ok && response.type === "basic") {
+                    const clone = response.clone();
+                    caches
+                        .open(CACHE_NAME)
+                        .then((cache) => cache.put(event.request, clone));
                 }
-            });
-        })
+                return response;
+            })
+            .catch(() =>
+                caches.match(event.request).then((cached) => {
+                    if (cached) return cached;
+                    if (event.request.mode === "navigate") {
+                        return caches.match("/budget/index.html");
+                    }
+                })
+            )
     );
 });

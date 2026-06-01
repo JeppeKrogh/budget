@@ -48,7 +48,7 @@
                             inputmode="numeric"
                             pattern="[0-9]*"
                             placeholder="Indkomst"
-                            class="h-11 w-full rounded-lg border border-slate-200 bg-white pl-10 pr-3 text-right text-sm font-medium tabular-nums text-slate-900 placeholder:font-normal placeholder:text-slate-400 outline-none transition focus:border-rose-400 focus:ring-2 focus:ring-rose-100"
+                            class="h-11 w-full rounded-lg border border-slate-200 bg-white pl-10 pr-3 text-right text-base font-medium tabular-nums text-slate-900 placeholder:font-normal placeholder:text-slate-400 outline-none transition focus:border-rose-400 focus:ring-2 focus:ring-rose-100"
                         />
                     </div>
                     <div class="relative">
@@ -62,7 +62,7 @@
                             inputmode="numeric"
                             pattern="[0-9]*"
                             placeholder="Indkomst"
-                            class="h-11 w-full rounded-lg border border-slate-200 bg-white pl-10 pr-3 text-right text-sm font-medium tabular-nums text-slate-900 placeholder:font-normal placeholder:text-slate-400 outline-none transition focus:border-indigo-400 focus:ring-2 focus:ring-indigo-100"
+                            class="h-11 w-full rounded-lg border border-slate-200 bg-white pl-10 pr-3 text-right text-base font-medium tabular-nums text-slate-900 placeholder:font-normal placeholder:text-slate-400 outline-none transition focus:border-indigo-400 focus:ring-2 focus:ring-indigo-100"
                         />
                     </div>
                 </div>
@@ -126,6 +126,16 @@
 
         <script>
             if ("serviceWorker" in navigator) {
+                const wasControlled = !!navigator.serviceWorker.controller;
+                let refreshing = false;
+                navigator.serviceWorker.addEventListener(
+                    "controllerchange",
+                    () => {
+                        if (!wasControlled || refreshing) return;
+                        refreshing = true;
+                        window.location.reload();
+                    },
+                );
                 navigator.serviceWorker
                     .register("/budget/sw.js")
                     .then((registration) =>
