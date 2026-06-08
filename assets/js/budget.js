@@ -1,12 +1,15 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.14.0/firebase-app.js";
 import {
   GoogleAuthProvider,
+  deleteUser,
   getAuth,
   onAuthStateChanged,
+  reauthenticateWithPopup,
   signInWithPopup,
   signOut,
 } from "https://www.gstatic.com/firebasejs/12.14.0/firebase-auth.js";
 import {
+  deleteDoc,
   doc,
   getDoc,
   getFirestore,
@@ -95,6 +98,8 @@ const configSaveButton = document.getElementById("configSaveButton");
 const authStatus = document.getElementById("authStatus");
 const signInButton = document.getElementById("signInButton");
 const signOutButton = document.getElementById("signOutButton");
+const deleteLocalButton = document.getElementById("deleteLocalButton");
+const deleteAccountButton = document.getElementById("deleteAccountButton");
 
 let currentUser = null;
 let config = { people: [], spending: [] };
@@ -495,6 +500,42 @@ async function saveConfigFromUI() {
   }, 1500);
 }
 
+async function deleteAccount() {
+  if (!auth?.currentUser) return;
+  if (
+    !confirm(
+      "Sletter din konto og al data. Dette kan ikke fortrydes. Er du sikker?",
+    )
+  )
+    return;
+  const user = auth.currentUser;
+  try {
+    await deleteDoc(doc(db, "users", user.uid));
+  } catch (err) {
+    console.error("Could not delete Firestore document", err);
+  }
+  try {
+    await deleteUser(user);
+  } catch (err) {
+    if (err?.code === "auth/requires-recent-login") {
+      try {
+        await reauthenticateWithPopup(user, new GoogleAuthProvider());
+        await deleteUser(user);
+      } catch (reauthErr) {
+        console.error("Reauth failed", reauthErr);
+        alert("Kunne ikke slette kontoen. Prøv at logge ud og ind igen.");
+        return;
+      }
+    } else {
+      console.error("Delete failed", err);
+      alert("Kunne ikke slette kontoen.");
+      return;
+    }
+  }
+  localStorage.removeItem(LOCAL_KEY);
+  clearLocalMode();
+}
+
 async function resetToWelcome() {
   localStorage.removeItem(LOCAL_KEY);
   clearLocalMode();
@@ -512,17 +553,29 @@ async function resetToWelcome() {
 }
 
 function updateAuthUI() {
+  deleteLocalButton.classList.toggle(
+    "hidden",
+    !(!currentUser && isLocalMode()),
+  );
+  deleteAccountButton.classList.toggle("hidden", !currentUser);
   if (!FIREBASE_READY) {
-    authStatus.textContent = "Login ikke konfigureret";
+    authStatus.textContent = isLocalMode()
+      ? "Lokal bruger"
+      : "Login ikke konfigureret";
     signInButton.classList.add("hidden");
     signOutButton.classList.add("hidden");
     return;
   }
   if (currentUser) {
-    authStatus.textContent =
-      currentUser.email ?? currentUser.displayName ?? "Logget ind";
+    const who =
+      currentUser.email ?? currentUser.displayName ?? "ukendt bruger";
+    authStatus.innerHTML = `<span class="block text-xs text-slate-400">Logget ind som</span><span class="block text-sm text-slate-700">${escapeHtml(who)}</span>`;
     signInButton.classList.add("hidden");
     signOutButton.classList.remove("hidden");
+  } else if (isLocalMode()) {
+    authStatus.textContent = "Lokal bruger";
+    signInButton.classList.remove("hidden");
+    signOutButton.classList.add("hidden");
   } else {
     authStatus.textContent = "Ikke logget ind";
     signInButton.classList.remove("hidden");
@@ -569,6 +622,7 @@ async function handleAuthChange(user) {
 function chooseLocalMode() {
   setLocalMode();
   applyLoadedConfig(loadLocalConfig());
+  updateAuthUI();
   setView(determineView());
 }
 
@@ -611,6 +665,12 @@ function triggerSignIn() {
 
 welcomeSignInButton.addEventListener("click", triggerSignIn);
 welcomeLocalButton.addEventListener("click", chooseLocalMode);
+deleteLocalButton.addEventListener("click", async () => {
+  if (!confirm("Sletter al lokal data. Er du sikker?")) return;
+  await resetToWelcome();
+  updateAuthUI();
+});
+deleteAccountButton.addEventListener("click", deleteAccount);
 
 if (FIREBASE_READY) {
   signInButton.addEventListener("click", triggerSignIn);
