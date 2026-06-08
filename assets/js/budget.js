@@ -3,8 +3,8 @@ document.addEventListener("DOMContentLoaded", function () {
     { key: "budget", label: "Budget", target: 25000 },
     { key: "hus", label: "Hus", target: 7000 },
     { key: "mad", label: "Mad", target: 5000 },
-    { key: "mubbiRo", label: "Børneopsparing 1", target: 250 },
-    { key: "mubbiMy", label: "Børneopsparing 2", target: 250 },
+    { key: "mubbiRo", label: "Børneopsparing 1", target: 100 },
+    { key: "mubbiMy", label: "Børneopsparing 2", target: 100 },
     { key: "selv", label: "Selv", target: 2000, perPersonCap: true },
     { key: "forbrug", label: "Forbrug", separator: true },
   ];
