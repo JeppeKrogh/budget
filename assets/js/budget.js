@@ -86,6 +86,9 @@ const tabConfig = document.getElementById("tabConfig");
 const welcomeSignInButton = document.getElementById("welcomeSignInButton");
 const welcomeLocalButton = document.getElementById("welcomeLocalButton");
 const incomeInputs = document.getElementById("incomeInputs");
+const budgetContent = document.getElementById("budgetContent");
+const mainEmptyState = document.getElementById("mainEmptyState");
+const overskudSection = document.getElementById("overskudSection");
 const resultCards = document.getElementById("resultCards");
 const totalForbrug = document.getElementById("totalForbrug");
 const calcButton = document.getElementById("calcButton");
@@ -131,7 +134,7 @@ function determineView() {
 }
 
 function setTabActive(tab, active) {
-  tab.classList.toggle("border-emerald-500", active);
+  tab.classList.toggle("border-slate-800", active);
   tab.classList.toggle("text-slate-900", active);
   tab.classList.toggle("font-semibold", active);
   tab.classList.toggle("border-transparent", !active);
@@ -383,7 +386,7 @@ function peopleRowHtml(p) {
   return `<div class="flex items-center gap-2 py-1.5" data-people-row data-id="${p.id}">
     <input type="text" data-field="name" value="${escapeHtml(p.name)}"
       placeholder="Navn"
-      class="h-9 flex-1 min-w-0 rounded-md border border-slate-200 bg-white px-2 text-sm text-slate-900 outline-none focus:border-slate-400" />
+      class="h-9 flex-1 min-w-0 rounded-md border border-slate-200 bg-white px-2 text-base text-slate-900 outline-none focus:border-slate-400" />
     <button type="button" data-action="delete-person" aria-label="Slet"
       class="h-9 w-9 shrink-0 rounded-md border border-slate-200 bg-white text-slate-400 transition hover:text-rose-500 focus:outline-none">
       <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mx-auto"><path d="M3 6h18"/><path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/></svg>
@@ -413,24 +416,26 @@ function readPeopleFromUI() {
 function configRowHtml(c) {
   const targetAttr = c.target === "" || c.target == null ? "" : c.target;
   const kind = c.kind === "personal" ? "personal" : "shared";
-  return `<div class="flex flex-wrap items-center gap-2 py-1.5" data-row data-id="${c.id}">
+  return `<div class="space-y-2 py-1.5" data-row data-id="${c.id}">
     <input type="text" data-field="label" value="${escapeHtml(c.label)}"
       placeholder="Navn"
-      class="h-9 min-w-[120px] flex-1 rounded-md border border-slate-200 bg-white px-2 text-sm text-slate-900 outline-none focus:border-slate-400" />
-    <input type="text" inputmode="numeric" pattern="[0-9]*" data-field="target" value="${escapeHtml(targetAttr)}"
-      placeholder="Beløb"
-      class="h-9 w-24 rounded-md border border-slate-200 bg-white px-2 text-left text-sm tabular-nums text-slate-900 placeholder:text-slate-400 outline-none focus:border-slate-400" />
-    <select data-field="kind"
-      class="h-9 rounded-md border border-slate-200 bg-white px-2 text-sm text-slate-900 outline-none focus:border-slate-400">
-      ${CATEGORY_KINDS.map(
-        (k) =>
-          `<option value="${k.value}"${k.value === kind ? " selected" : ""}>${k.label}</option>`,
-      ).join("")}
-    </select>
-    <button type="button" data-action="delete" aria-label="Slet"
-      class="h-9 w-9 shrink-0 rounded-md border border-slate-200 bg-white text-slate-400 transition hover:text-rose-500 focus:outline-none">
-      <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mx-auto"><path d="M3 6h18"/><path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/></svg>
-    </button>
+      class="h-9 w-full rounded-md border border-slate-200 bg-white px-2 text-base text-slate-900 outline-none focus:border-slate-400" />
+    <div class="flex items-center gap-2">
+      <input type="text" inputmode="numeric" pattern="[0-9]*" data-field="target" value="${escapeHtml(targetAttr)}"
+        placeholder="Beløb"
+        class="h-9 w-24 rounded-md border border-slate-200 bg-white px-2 text-left text-base tabular-nums text-slate-900 placeholder:text-slate-400 outline-none focus:border-slate-400" />
+      <select data-field="kind"
+        class="h-9 flex-1 min-w-0 rounded-md border border-slate-200 bg-white px-2 text-base text-slate-900 outline-none focus:border-slate-400">
+        ${CATEGORY_KINDS.map(
+          (k) =>
+            `<option value="${k.value}"${k.value === kind ? " selected" : ""}>${k.label}</option>`,
+        ).join("")}
+      </select>
+      <button type="button" data-action="delete" aria-label="Slet"
+        class="h-9 w-9 shrink-0 rounded-md border border-slate-200 bg-white text-slate-400 transition hover:text-rose-500 focus:outline-none">
+        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mx-auto"><path d="M3 6h18"/><path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/></svg>
+      </button>
+    </div>
   </div>`;
 }
 
@@ -488,6 +493,7 @@ async function saveConfigFromUI() {
     downloadButton.classList.add("hidden");
     lastResult = null;
     refreshCalcAvailability();
+    refreshMainViewVisibility();
     configSaveButton.textContent = "Gemt";
     setTimeout(() => setView("main"), 600);
   } catch (err) {
@@ -574,10 +580,12 @@ function updateAuthUI() {
     signOutButton.classList.remove("hidden");
   } else if (isLocalMode()) {
     authStatus.textContent = "Lokal bruger";
+    signInButton.textContent = "Log ind med Google";
     signInButton.classList.remove("hidden");
     signOutButton.classList.add("hidden");
   } else {
     authStatus.textContent = "Ikke logget ind";
+    signInButton.textContent = "Log ind";
     signInButton.classList.remove("hidden");
     signOutButton.classList.add("hidden");
   }
@@ -593,6 +601,14 @@ function applyLoadedConfig(cfg) {
   downloadButton.classList.add("hidden");
   lastResult = null;
   refreshCalcAvailability();
+  refreshMainViewVisibility();
+}
+
+function refreshMainViewVisibility() {
+  const ready = config.people.length > 0 && config.spending.length > 0;
+  mainEmptyState.classList.toggle("hidden", ready);
+  budgetContent.classList.toggle("hidden", !ready);
+  overskudSection.classList.toggle("hidden", !ready);
 }
 
 async function handleAuthChange(user) {
@@ -863,7 +879,7 @@ function downloadImage() {
       navigator.canShare({ files: [file] })
     ) {
       try {
-        await navigator.share({ files: [file], title: "Budget" });
+        await navigator.share({ files: [file], title: "ProRata-Fordeleren" });
         return;
       } catch (err) {
         if (err && err.name === "AbortError") return;

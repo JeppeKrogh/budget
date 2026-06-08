@@ -1,7 +1,7 @@
 {
-  "name": "Budget jsapp",
-  "short_name": "budget",
-  "description": "Budget app that works offline",
+  "name": "ProRata-Fordeleren",
+  "short_name": "ProRata",
+  "description": "ProRata-Fordeleren – fordel indkomst på konti efter solidariske principper. Virker offline.",
   "start_url": "/budget/",
   "display": "standalone",
   "background_color": "#FFFFFF",
