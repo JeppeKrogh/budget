@@ -3,8 +3,8 @@ document.addEventListener("DOMContentLoaded", function () {
     { key: "budget", label: "Budget", target: 25000 },
     { key: "hus", label: "Hus", target: 7000 },
     { key: "mad", label: "Mad", target: 5000 },
-    { key: "mubbiRo", label: "Børneopsparing 1", target: 100 },
-    { key: "mubbiMy", label: "Børneopsparing 2", target: 100 },
+    { key: "mubbiRo", label: "Børneopsparing 1", target: 250 },
+    { key: "mubbiMy", label: "Børneopsparing 2", target: 250 },
     { key: "selv", label: "Selv", target: 2000, perPersonCap: true },
     { key: "forbrug", label: "Forbrug", separator: true },
   ];
@@ -16,6 +16,9 @@ document.addEventListener("DOMContentLoaded", function () {
   const totalForbrug = document.getElementById("totalForbrug");
   const calcButton = document.getElementById("calcButton");
   const downloadButton = document.getElementById("downloadButton");
+  const configToggle = document.getElementById("configToggle");
+  const configPanel = document.getElementById("configPanel");
+  const configList = document.getElementById("configList");
 
   let lastResult = null;
 
@@ -61,6 +64,24 @@ document.addEventListener("DOMContentLoaded", function () {
 
   renderList(idaList, null, THEMES.ida);
   renderList(jeppeList, null, THEMES.jeppe);
+
+  function renderConfig() {
+    configList.innerHTML = CATEGORIES.filter((c) => c.target != null)
+      .map((c) => {
+        const suffix = c.perPersonCap ? " (pr. person)" : "";
+        return `<div class="flex items-center justify-between py-1.5">
+          <dt class="text-slate-600">${c.label}${suffix}</dt>
+          <dd class="tabular-nums font-medium text-slate-900">${formatNumber(c.target)}</dd>
+        </div>`;
+      })
+      .join("");
+  }
+
+  renderConfig();
+
+  configToggle.addEventListener("click", () => {
+    configPanel.classList.toggle("hidden");
+  });
 
   function shareOf(income, total, target) {
     return Math.round((income / total) * target);
@@ -239,8 +260,8 @@ document.addEventListener("DOMContentLoaded", function () {
       y += personCardHeight + cardGap;
     }
 
-    drawPersonCard("👸  Ida", lastResult.ida, CARD_THEMES.ida);
-    drawPersonCard("🤴  Jeppe", lastResult.jeppe, CARD_THEMES.jeppe);
+    drawPersonCard("👸", lastResult.ida, CARD_THEMES.ida);
+    drawPersonCard("🤴", lastResult.jeppe, CARD_THEMES.jeppe);
 
     drawCard(totalCardHeight, CARD_THEMES.total);
     const innerLeft = pagePad + cardPad;
@@ -250,7 +271,7 @@ document.addEventListener("DOMContentLoaded", function () {
     ctx.fillStyle = CARD_THEMES.total.header;
     ctx.textAlign = "left";
     ctx.textBaseline = "middle";
-    ctx.fillText("Samlet forbrug", innerLeft, cy);
+    ctx.fillText("Samlet til forbrug", innerLeft, cy);
     ctx.font =
       "600 32px -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif";
     ctx.fillStyle = CARD_THEMES.total.amount;
