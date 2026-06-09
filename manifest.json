@@ -2,37 +2,37 @@
   "name": "ProRata-Fordeleren",
   "short_name": "ProRata",
   "description": "A Progressive Web App",
-  "start_url": "/budget/",
+  "start_url": "/ProRata-Fordeleren/",
   "display": "standalone",
   "background_color": "#F9A8D3",
   "theme_color": "#FFFFFF",
   "icons": [
     {
-      "src": "/budget/icon-192x192.png?v=2",
+      "src": "/ProRata-Fordeleren/icon-192x192.png?v=2",
       "sizes": "192x192",
       "type": "image/png",
       "purpose": "any"
     },
     {
-      "src": "/budget/icon-384x384.png?v=2",
+      "src": "/ProRata-Fordeleren/icon-384x384.png?v=2",
       "sizes": "384x384",
       "type": "image/png",
       "purpose": "any"
     },
     {
-      "src": "/budget/icon-512x512.png?v=2",
+      "src": "/ProRata-Fordeleren/icon-512x512.png?v=2",
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "any"
     },
     {
-      "src": "/budget/icon-192x192-maskable.png?v=2",
+      "src": "/ProRata-Fordeleren/icon-192x192-maskable.png?v=2",
       "sizes": "192x192",
       "type": "image/png",
       "purpose": "maskable"
     },
     {
-      "src": "/budget/icon-512x512-maskable.png?v=2",
+      "src": "/ProRata-Fordeleren/icon-512x512-maskable.png?v=2",
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "maskable"

@@ -1,15 +1,15 @@
-const CACHE_NAME = "offline-cache-v53";
+const CACHE_NAME = "offline-cache-v54";
 const OFFLINE_URLS = [
-    "/budget/",
-    "/budget/favicon.ico",
-    "/budget/index.html",
-    "/budget/192x192.png",
-    "/budget/512x512.png",
-    "/budget/manifest.json",
-    "/budget/assets/css/material-tailwind.css",
-    "/budget/assets/js/budget.js",
-    "/budget/assets/js/ripple.js",
-    "/budget/assets/js/tw.js",
+    "/ProRata-Fordeleren/",
+    "/ProRata-Fordeleren/favicon.ico",
+    "/ProRata-Fordeleren/index.html",
+    "/ProRata-Fordeleren/192x192.png",
+    "/ProRata-Fordeleren/512x512.png",
+    "/ProRata-Fordeleren/manifest.json",
+    "/ProRata-Fordeleren/assets/css/material-tailwind.css",
+    "/ProRata-Fordeleren/assets/js/budget.js",
+    "/ProRata-Fordeleren/assets/js/ripple.js",
+    "/ProRata-Fordeleren/assets/js/tw.js",
 ];
 
 self.addEventListener("install", (event) => {
@@ -52,7 +52,7 @@ self.addEventListener("fetch", (event) => {
                 caches.match(event.request).then((cached) => {
                     if (cached) return cached;
                     if (event.request.mode === "navigate") {
-                        return caches.match("/budget/index.html");
+                        return caches.match("/ProRata-Fordeleren/index.html");
                     }
                 })
             )
