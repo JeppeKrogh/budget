@@ -1,21 +1,41 @@
 {
   "name": "ProRata-Fordeleren",
   "short_name": "ProRata",
-  "description": "ProRata-Fordeleren – fordel indkomst på konti efter solidariske principper. Virker offline.",
+  "description": "A Progressive Web App",
   "start_url": "/budget/",
   "display": "standalone",
-  "background_color": "#FFFFFF",
+  "background_color": "#F9A8D3",
   "theme_color": "#FFFFFF",
   "icons": [
     {
-      "src": "/budget/192x192.png",
+      "src": "/icons/icon-192x192.png",
       "sizes": "192x192",
-      "type": "image/png"
+      "type": "image/png",
+      "purpose": "any"
     },
     {
-      "src": "/budget/512x512.png",
+      "src": "/icons/icon-384x384.png",
+      "sizes": "384x384",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/icons/icon-512x512.png",
       "sizes": "512x512",
-      "type": "image/png"
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/icons/icon-192x192-maskable.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "maskable"
+    },
+    {
+      "src": "/icons/icon-512x512-maskable.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
     }
   ]
 }

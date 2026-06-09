@@ -105,6 +105,15 @@ const signOutButton = document.getElementById("signOutButton");
 const deleteLocalButton = document.getElementById("deleteLocalButton");
 const deleteAccountButton = document.getElementById("deleteAccountButton");
 const helpDetails = document.getElementById("helpDetails");
+const loadingOverlay = document.getElementById("loadingOverlay");
+
+function showLoading() {
+  loadingOverlay?.classList.remove("is-hidden");
+}
+
+function hideLoading() {
+  loadingOverlay?.classList.add("is-hidden");
+}
 
 if (helpDetails) {
   if (localStorage.getItem(HELP_OPEN_KEY) === "false") {
@@ -162,6 +171,7 @@ function setView(name) {
   topNav.classList.toggle("grid", showTabs);
   setTabActive(tabMain, name === "main");
   setTabActive(tabConfig, name === "config");
+  hideLoading();
 }
 
 function formatNumber(value) {
@@ -686,8 +696,10 @@ configList.addEventListener("click", (e) => {
 
 function triggerSignIn() {
   if (!FIREBASE_READY) return;
+  showLoading();
   signInWithPopup(auth, new GoogleAuthProvider()).catch((err) => {
     console.error("Sign-in failed", err);
+    hideLoading();
   });
 }
 
@@ -704,7 +716,11 @@ if (FIREBASE_READY) {
   signInButton.addEventListener("click", triggerSignIn);
   signOutButton.addEventListener("click", () => {
     clearLocalMode();
-    signOut(auth).catch((err) => console.error("Sign-out failed", err));
+    showLoading();
+    signOut(auth).catch((err) => {
+      console.error("Sign-out failed", err);
+      hideLoading();
+    });
   });
   if (!isLocalMode()) {
     welcomeSignInButton.disabled = false;

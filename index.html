@@ -8,25 +8,15 @@
         <meta name="apple-mobile-web-app-status-bar-style" content="black" />
         <meta name="apple-mobile-web-app-title" content="ProRata-Fordeleren" />
         <title>ProRata-Fordeleren</title>
-        <link rel="icon" type="image/x-icon" href="/budget/favicon.ico" />
-        <link
-            rel="apple-touch-icon"
-            sizes="180x180"
-            href="/budget/192x192.png"
-        />
-        <link
-            rel="apple-touch-icon"
-            sizes="152x152"
-            href="/budget/192x192.png"
-        />
-        <link
-            rel="apple-touch-icon"
-            sizes="120x120"
-            href="/budget/192x192.png"
-        />
-        <link rel="apple-touch-startup-image" href="/budget/oioi.png" />
-        <link rel="stylesheet" href="assets/css/material-tailwind.css" />
-        <link rel="manifest" href="/budget/manifest.json" />
+        <link rel="icon" href="/budget/favicon.ico" sizes="48x48">
+        <link rel="icon" href="/budget/icon-192x192.png" type="image/png" sizes="192x192">
+        <link rel="icon" href="/budget/icon-512x512.png" type="image/png" sizes="512x512">
+        <link rel="apple-touch-icon" href="icon-180x180.png">
+        <link rel="manifest" href="/budget/manifest.json">
+        <meta name="theme-color" content="#FFFFFF">
+        <meta name="apple-mobile-web-app-capable" content="yes">
+        <meta name="apple-mobile-web-app-status-bar-style" content="default">
+        <meta name="apple-mobile-web-app-title" content="ProRata-Fordeleren">
         <script src="assets/js/tw.js"></script>
         <script src="assets/js/ripple.js"></script>
         <script type="module" src="assets/js/budget.js"></script>
@@ -83,10 +73,61 @@
                     animation: none;
                 }
             }
+
+            .loading-overlay {
+                position: fixed;
+                inset: 0;
+                z-index: 100;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                background: #f8fafc;
+            }
+            .loading-overlay.is-hidden {
+                display: none !important;
+            }
+            .loading-overlay__inner {
+                text-align: center;
+            }
+            .loading-overlay__emoji {
+                display: inline-block;
+                font-size: 3rem;
+                line-height: 1;
+                animation: flyMoney 1.4s ease-in-out infinite;
+            }
+            .loading-overlay__text {
+                margin-top: 1rem;
+                font-size: 0.875rem;
+                font-weight: 500;
+                color: #64748b;
+                letter-spacing: 0.02em;
+            }
+            @keyframes flyMoney {
+                0% {
+                    transform: translateY(0) rotate(0deg);
+                }
+                50% {
+                    transform: translateY(-14px) rotate(180deg);
+                }
+                100% {
+                    transform: translateY(0) rotate(360deg);
+                }
+            }
+            @media (prefers-reduced-motion: reduce) {
+                .loading-overlay__emoji {
+                    animation: none;
+                }
+            }
         </style>
     </head>
 
     <body class="bg-slate-50 min-h-screen">
+        <div id="loadingOverlay" class="loading-overlay" aria-live="polite">
+            <div class="loading-overlay__inner">
+                <div class="loading-overlay__emoji">💸</div>
+                <p class="loading-overlay__text">Loading</p>
+            </div>
+        </div>
         <main class="mx-auto max-w-lg px-4 py-6">
             <nav
                 id="topNav"
