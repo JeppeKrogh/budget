@@ -93,6 +93,7 @@ const overskudSection = document.getElementById("overskudSection");
 const resultCards = document.getElementById("resultCards");
 const totalForbrug = document.getElementById("totalForbrug");
 const calcButton = document.getElementById("calcButton");
+const resetButton = document.getElementById("resetButton");
 const downloadButton = document.getElementById("downloadButton");
 const calcWarning = document.getElementById("calcWarning");
 const calcWarningAmount = document.getElementById("calcWarningAmount");
@@ -421,6 +422,23 @@ function refreshCalcAvailability() {
     config.people.length > 0 &&
     config.people.every((p) => Number.isFinite(readIncomeForPerson(p.id)));
   calcButton.disabled = !allIncomes;
+  const anyIncomeTyped = config.people.some((p) => {
+    const input = incomeInputs.querySelector(
+      `[data-person-income="${p.id}"]`,
+    );
+    return input && input.value.trim() !== "";
+  });
+  resetButton.disabled = !anyIncomeTyped && lastResult == null;
+}
+
+function resetCalculation() {
+  incomeInputs.querySelectorAll("[data-person-income]").forEach((input) => {
+    input.value = "";
+  });
+  lastResult = null;
+  totalForbrug.textContent = "—";
+  setShortfall(0);
+  refreshCalcAvailability();
 }
 
 function snapshotIncomes() {
@@ -713,6 +731,7 @@ incomeInputs.addEventListener("input", (e) => {
   if (e.target.matches("[data-person-income]")) refreshCalcAvailability();
 });
 calcButton.addEventListener("click", calculateTransfers);
+resetButton.addEventListener("click", resetCalculation);
 downloadButton.addEventListener("click", downloadImage);
 tabMain.addEventListener("click", () => setView("main"));
 tabConfig.addEventListener("click", () => setView("config"));
