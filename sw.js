@@ -1,10 +1,10 @@
-const CACHE_NAME = "offline-cache-v54";
+const CACHE_NAME = "offline-cache-v55";
 const OFFLINE_URLS = [
     "/ProRata-Fordeleren/",
-    "/ProRata-Fordeleren/favicon.ico",
+    "/ProRata-Fordeleren/favicon.png",
     "/ProRata-Fordeleren/index.html",
-    "/ProRata-Fordeleren/192x192.png",
-    "/ProRata-Fordeleren/512x512.png",
+    "/ProRata-Fordeleren/icon-192x192.png",
+    "/ProRata-Fordeleren/icon-512x512.png",
     "/ProRata-Fordeleren/manifest.json",
     "/ProRata-Fordeleren/assets/css/material-tailwind.css",
     "/ProRata-Fordeleren/assets/js/budget.js",
