@@ -38,6 +38,7 @@ if (FIREBASE_READY) {
 
 const LOCAL_KEY = "budget.config.v1";
 const MODE_KEY = "budget.mode";
+const HELP_OPEN_KEY = "budget.help-open";
 const OVERSKUD_LABEL = "Overskud";
 const CATEGORY_KINDS = [
   { value: "shared", label: "Delt" },
@@ -103,6 +104,16 @@ const signInButton = document.getElementById("signInButton");
 const signOutButton = document.getElementById("signOutButton");
 const deleteLocalButton = document.getElementById("deleteLocalButton");
 const deleteAccountButton = document.getElementById("deleteAccountButton");
+const helpDetails = document.getElementById("helpDetails");
+
+if (helpDetails) {
+  if (localStorage.getItem(HELP_OPEN_KEY) === "false") {
+    helpDetails.open = false;
+  }
+  helpDetails.addEventListener("toggle", () => {
+    localStorage.setItem(HELP_OPEN_KEY, helpDetails.open ? "true" : "false");
+  });
+}
 
 let currentUser = null;
 let config = { people: [], spending: [] };

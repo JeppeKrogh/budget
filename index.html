@@ -104,7 +104,7 @@
                     type="button"
                     class="border-b-2 border-transparent py-3 text-center text-sm font-medium text-slate-500 transition hover:text-slate-900"
                 >
-                    Indstillinger
+                    Opsætning
                 </button>
             </nav>
 
@@ -151,7 +151,7 @@
                     id="mainEmptyState"
                     class="hidden rounded-2xl border border-dashed border-slate-200 bg-white p-6 text-center text-sm text-slate-500"
                 >
-                    Tilføj personer og kategorier under indstillinger for at
+                    Tilføj personer og kategorier under opsætning for at
                     bruge ProRata-Fordeleren
                 </div>
 
@@ -268,6 +268,37 @@
                 <div
                     class="mt-4 rounded-2xl border border-slate-200 bg-white p-5 text-center shadow-sm"
                 >
+                    <details id="helpDetails" class="group mb-4" open>
+                        <summary
+                            class="flex h-9 w-full cursor-pointer list-none items-center justify-center gap-1.5 rounded-md border border-slate-200 bg-white px-3 text-xs font-medium text-slate-700 transition hover:bg-slate-50 group-open:rounded-b-none group-open:border-b-0 [&::-webkit-details-marker]:hidden"
+                        >
+                            <svg
+                                xmlns="http://www.w3.org/2000/svg"
+                                width="12"
+                                height="12"
+                                viewBox="0 0 24 24"
+                                fill="none"
+                                stroke="currentColor"
+                                stroke-width="2"
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                                class="transition-transform group-open:rotate-180"
+                            >
+                                <polyline points="6 9 12 15 18 9" />
+                            </svg>
+                            Sådan virker det
+                        </summary>
+                        <div
+                            class="rounded-b-md border border-slate-200 bg-white p-3 text-left text-xs leading-relaxed text-slate-600"
+                        >
+                            Hver person bidrager til kategorierne.<br />
+                            <strong>Delt</strong> fordeles efter
+                            indkomstforhold.<br />
+                            <strong>Pr. person</strong> giver hver person op til
+                            samme beløb.<br />
+                            Det, der er tilbage, bliver til Overskud.
+                        </div>
+                    </details>
                     <p id="authStatus" class="break-all text-sm text-slate-600">
                         Ikke logget ind
                     </p>
