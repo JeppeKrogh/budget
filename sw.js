@@ -1,4 +1,4 @@
-const CACHE_NAME = "offline-cache-v47";
+const CACHE_NAME = "offline-cache-v50";
 const OFFLINE_URLS = [
     "/budget/",
     "/budget/favicon.ico",

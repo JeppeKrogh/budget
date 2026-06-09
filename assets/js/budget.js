@@ -94,6 +94,8 @@ const resultCards = document.getElementById("resultCards");
 const totalForbrug = document.getElementById("totalForbrug");
 const calcButton = document.getElementById("calcButton");
 const downloadButton = document.getElementById("downloadButton");
+const calcWarning = document.getElementById("calcWarning");
+const calcWarningAmount = document.getElementById("calcWarningAmount");
 const peopleList = document.getElementById("peopleList");
 const peopleAddButton = document.getElementById("peopleAddButton");
 const configList = document.getElementById("configList");
@@ -127,6 +129,7 @@ if (helpDetails) {
 let currentUser = null;
 let config = { people: [], spending: [] };
 let lastResult = null;
+let currentShortfall = 0;
 
 function isLocalMode() {
   return localStorage.getItem(MODE_KEY) === "local";
@@ -340,20 +343,22 @@ function shareOf(income, total, target) {
 function calcPerson(income, totalIncome) {
   const spending = {};
   let leftover = income;
-  const shared = config.spending.filter((c) => c.kind !== "personal");
-  const personal = config.spending.filter((c) => c.kind === "personal");
-  shared.forEach((c) => {
-    const amount = shareOf(income, totalIncome, c.target);
-    spending[c.id] = amount;
-    leftover -= amount;
-  });
-  leftover = Math.round(leftover);
-  personal.forEach((c) => {
-    const amount = Math.max(0, Math.min(leftover, c.target));
-    spending[c.id] = amount;
-    leftover -= amount;
-  });
-  return { spending, forbrug: Math.max(0, leftover) };
+  let hasShortfall = false;
+  for (const c of config.spending) {
+    const ideal =
+      c.kind === "personal"
+        ? c.target
+        : shareOf(income, totalIncome, c.target);
+    const actual = Math.max(0, Math.min(leftover, ideal));
+    if (ideal - actual > 1) hasShortfall = true;
+    spending[c.id] = actual;
+    leftover -= actual;
+  }
+  return {
+    spending,
+    forbrug: Math.max(0, Math.round(leftover)),
+    hasShortfall,
+  };
 }
 
 function calculateTransfers() {
@@ -375,9 +380,40 @@ function calculateTransfers() {
     renderPersonResult(p.id, r);
   });
 
+  const totalRequired = config.spending.reduce(
+    (sum, c) =>
+      sum + (c.kind === "personal" ? c.target * config.people.length : c.target),
+    0,
+  );
+  const shortfall = Math.max(0, Math.round(totalRequired - totalIncome));
+
   totalForbrug.textContent = formatNumber(totalRest);
   lastResult = { perPerson, totalRest };
-  downloadButton.classList.remove("hidden");
+  setShortfall(shortfall);
+}
+
+function setShortfall(amount) {
+  currentShortfall = Math.max(0, amount);
+  const show = currentShortfall > 0;
+  calcWarning?.classList.toggle("hidden", !show);
+  if (calcWarningAmount) {
+    calcWarningAmount.textContent = show
+      ? `Der mangler ${formatNumber(currentShortfall)} kr.`
+      : "";
+  }
+  refreshResultsVisibility();
+}
+
+function setShortfallVisible(visible) {
+  if (!visible) setShortfall(0);
+}
+
+function refreshResultsVisibility() {
+  const ready = config.people.length > 0 && config.spending.length > 0;
+  const showResults = ready && lastResult != null && currentShortfall === 0;
+  resultCards.classList.toggle("hidden", !showResults);
+  overskudSection.classList.toggle("hidden", !showResults);
+  downloadButton.classList.toggle("hidden", !showResults);
 }
 
 function refreshCalcAvailability() {
@@ -511,8 +547,8 @@ async function saveConfigFromUI() {
     restoreIncomes(incomeSnap);
     renderResultCards();
     totalForbrug.textContent = "—";
-    downloadButton.classList.add("hidden");
     lastResult = null;
+    setShortfall(0);
     refreshCalcAvailability();
     refreshMainViewVisibility();
     configSaveButton.textContent = "Gemt";
@@ -619,8 +655,8 @@ function applyLoadedConfig(cfg) {
   renderIncomeInputs();
   renderResultCards();
   totalForbrug.textContent = "—";
-  downloadButton.classList.add("hidden");
   lastResult = null;
+  setShortfall(0);
   refreshCalcAvailability();
   refreshMainViewVisibility();
 }
@@ -629,8 +665,8 @@ function refreshMainViewVisibility() {
   const ready = config.people.length > 0 && config.spending.length > 0;
   mainEmptyState.classList.toggle("hidden", ready);
   budgetContent.classList.toggle("hidden", !ready);
-  resultCards.classList.toggle("hidden", !ready);
-  overskudSection.classList.toggle("hidden", !ready);
+  if (!ready) setShortfall(0);
+  refreshResultsVisibility();
 }
 
 async function handleAuthChange(user) {
