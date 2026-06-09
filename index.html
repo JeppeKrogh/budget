@@ -91,9 +91,13 @@
             }
             .loading-overlay__emoji {
                 display: inline-block;
+                width: 1em;
+                height: 1em;
                 font-size: 3rem;
                 line-height: 1;
-                animation: flyMoney 1.4s ease-in-out infinite;
+                text-align: center;
+                transform-origin: 50% 50%;
+                animation: flyMoney 1.8s ease-in-out infinite;
             }
             .loading-overlay__text {
                 margin-top: 1rem;
@@ -102,15 +106,16 @@
                 color: #64748b;
                 letter-spacing: 0.02em;
             }
+            #loadingVerb {
+                display: inline-block;
+                will-change: transform, opacity;
+            }
             @keyframes flyMoney {
-                0% {
-                    transform: translateY(0) rotate(0deg);
+                from {
+                    transform: rotate(0deg);
                 }
-                50% {
-                    transform: translateY(-14px) rotate(180deg);
-                }
-                100% {
-                    transform: translateY(0) rotate(360deg);
+                to {
+                    transform: rotate(360deg);
                 }
             }
             @media (prefers-reduced-motion: reduce) {
@@ -125,9 +130,90 @@
         <div id="loadingOverlay" class="loading-overlay" aria-live="polite">
             <div class="loading-overlay__inner">
                 <div class="loading-overlay__emoji">💸</div>
-                <p class="loading-overlay__text">Loading</p>
+                <p class="loading-overlay__text">
+                    ProRata is <span id="loadingVerb">working</span>
+                </p>
             </div>
         </div>
+        <script>
+            (function () {
+                var verbs = [
+                    "sharing",
+                    "caring",
+                    "splitting",
+                    "balancing",
+                    "dividing",
+                    "calculating",
+                    "prorating",
+                    "tallying",
+                    "juggling",
+                    "vibing",
+                    "hustling",
+                    "thinking",
+                    "crunching",
+                    "distributing",
+                    "moneying",
+                    "flexing",
+                ];
+                var last = null;
+
+                function pick() {
+                    var v;
+                    do {
+                        v = verbs[Math.floor(Math.random() * verbs.length)];
+                    } while (v === last && verbs.length > 1);
+                    last = v;
+                    return v;
+                }
+
+                function swapTo(el, target) {
+                    if (typeof el.animate === "function") {
+                        el.animate(
+                            [
+                                {
+                                    opacity: 1,
+                                    transform: "translateY(0)",
+                                    offset: 0,
+                                },
+                                {
+                                    opacity: 0,
+                                    transform: "translateY(-10px)",
+                                    offset: 0.45,
+                                },
+                                {
+                                    opacity: 0,
+                                    transform: "translateY(10px)",
+                                    offset: 0.55,
+                                },
+                                {
+                                    opacity: 1,
+                                    transform: "translateY(0)",
+                                    offset: 1,
+                                },
+                            ],
+                            {
+                                duration: 600,
+                                easing: "cubic-bezier(0.4, 0, 0.2, 1)",
+                            },
+                        );
+                        setTimeout(function () {
+                            el.textContent = target;
+                        }, 300);
+                    } else {
+                        el.textContent = target;
+                    }
+                }
+
+                function tick() {
+                    var el = document.getElementById("loadingVerb");
+                    if (!el) return;
+                    swapTo(el, pick());
+                }
+
+                tick();
+                setInterval(tick, 3000);
+            })();
+        </script>
         <main class="mx-auto max-w-lg px-4 py-6">
             <nav
                 id="topNav"
