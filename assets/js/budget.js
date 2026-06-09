@@ -608,6 +608,7 @@ function refreshMainViewVisibility() {
   const ready = config.people.length > 0 && config.spending.length > 0;
   mainEmptyState.classList.toggle("hidden", ready);
   budgetContent.classList.toggle("hidden", !ready);
+  resultCards.classList.toggle("hidden", !ready);
   overskudSection.classList.toggle("hidden", !ready);
 }
 
