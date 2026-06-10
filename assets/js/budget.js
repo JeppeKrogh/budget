@@ -38,7 +38,7 @@ if (FIREBASE_READY) {
 
 const LOCAL_KEY = "budget.config.v1";
 const MODE_KEY = "budget.mode";
-const HELP_OPEN_KEY = "budget.help-open";
+const HELP_DISMISSED_KEY = "budget.help-dismissed";
 const OVERSKUD_LABEL = "Overskud";
 const CATEGORY_KINDS = [
   { value: "shared", label: "Delt" },
@@ -81,9 +81,17 @@ const ACCENTS = [
 const welcomeView = document.getElementById("welcomeView");
 const mainView = document.getElementById("mainView");
 const configView = document.getElementById("configView");
+const moreView = document.getElementById("moreView");
 const topNav = document.getElementById("topNav");
 const tabMain = document.getElementById("tabMain");
 const tabConfig = document.getElementById("tabConfig");
+const tabMore = document.getElementById("tabMore");
+const helpSheet = document.getElementById("helpSheet");
+const helpSheetBackdrop = document.getElementById("helpSheetBackdrop");
+const helpSheetBack = document.getElementById("helpSheetBack");
+const helpSheetNext = document.getElementById("helpSheetNext");
+const helpSteps = Array.from(helpSheet.querySelectorAll("[data-help-step]"));
+const helpDots = Array.from(helpSheet.querySelectorAll("[data-help-dot]"));
 const welcomeSignInButton = document.getElementById("welcomeSignInButton");
 const welcomeLocalButton = document.getElementById("welcomeLocalButton");
 const incomeInputs = document.getElementById("incomeInputs");
@@ -107,7 +115,6 @@ const signInButton = document.getElementById("signInButton");
 const signOutButton = document.getElementById("signOutButton");
 const deleteLocalButton = document.getElementById("deleteLocalButton");
 const deleteAccountButton = document.getElementById("deleteAccountButton");
-const helpDetails = document.getElementById("helpDetails");
 const loadingOverlay = document.getElementById("loadingOverlay");
 
 function showLoading() {
@@ -116,15 +123,6 @@ function showLoading() {
 
 function hideLoading() {
   loadingOverlay?.classList.add("is-hidden");
-}
-
-if (helpDetails) {
-  if (localStorage.getItem(HELP_OPEN_KEY) === "false") {
-    helpDetails.open = false;
-  }
-  helpDetails.addEventListener("toggle", () => {
-    localStorage.setItem(HELP_OPEN_KEY, helpDetails.open ? "true" : "false");
-  });
 }
 
 let currentUser = null;
@@ -170,12 +168,45 @@ function setView(name) {
   welcomeView.classList.toggle("hidden", name !== "welcome");
   mainView.classList.toggle("hidden", name !== "main");
   configView.classList.toggle("hidden", name !== "config");
+  moreView.classList.toggle("hidden", name !== "more");
   const showTabs = name !== "welcome";
   topNav.classList.toggle("hidden", !showTabs);
   topNav.classList.toggle("grid", showTabs);
   setTabActive(tabMain, name === "main");
   setTabActive(tabConfig, name === "config");
+  setTabActive(tabMore, name === "more");
+  if (name === "config" && localStorage.getItem(HELP_DISMISSED_KEY) !== "true") {
+    showHelpSheet();
+  }
   hideLoading();
+}
+
+let helpStep = 0;
+
+function renderHelpStep() {
+  helpSteps.forEach((el, i) => el.classList.toggle("hidden", i !== helpStep));
+  helpDots.forEach((el, i) => {
+    el.classList.toggle("bg-slate-800", i === helpStep);
+    el.classList.toggle("bg-slate-300", i !== helpStep);
+  });
+  helpSheetBack.classList.toggle("hidden", helpStep === 0);
+  helpSheetNext.textContent =
+    helpStep === helpSteps.length - 1 ? "Forstået" : "Næste";
+}
+
+function showHelpSheet() {
+  helpStep = 0;
+  renderHelpStep();
+  helpSheet.classList.remove("hidden");
+  helpSheet.classList.add("flex");
+  document.body.style.overflow = "hidden";
+}
+
+function dismissHelpSheet() {
+  helpSheet.classList.add("hidden");
+  helpSheet.classList.remove("flex");
+  document.body.style.overflow = "";
+  localStorage.setItem(HELP_DISMISSED_KEY, "true");
 }
 
 function formatNumber(value) {
@@ -307,7 +338,7 @@ function renderResultCards() {
   resultCards.innerHTML = config.people
     .map((p, i) => {
       const accent = accentFor(i);
-      return `<section class="mt-3 rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
+      return `<section class="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
         <header class="mb-2">
           <h2 class="text-base font-semibold ${accent.headerClass}">${escapeHtml(p.name)}</h2>
         </header>
@@ -391,6 +422,12 @@ function calculateTransfers() {
   totalForbrug.textContent = formatNumber(totalRest);
   lastResult = { perPerson, totalRest };
   setShortfall(shortfall);
+
+  if (shortfall === 0 && window.matchMedia("(max-width: 639px)").matches) {
+    requestAnimationFrame(() => {
+      resultCards.scrollIntoView({ behavior: "smooth", block: "start" });
+    });
+  }
 }
 
 function setShortfall(amount) {
@@ -730,11 +767,47 @@ document.addEventListener("beforeinput", (e) => {
 incomeInputs.addEventListener("input", (e) => {
   if (e.target.matches("[data-person-income]")) refreshCalcAvailability();
 });
+
+if (window.visualViewport) {
+  window.visualViewport.addEventListener("resize", () => {
+    const keyboardOpen =
+      window.innerHeight - window.visualViewport.height > 150;
+    topNav.classList.toggle("keyboard-open", keyboardOpen);
+  });
+}
+
+if (canShareResultImage()) {
+  document.getElementById("downloadButtonLabel").textContent =
+    "Del som billede";
+  document.getElementById("downloadIcon").classList.add("hidden");
+  document.getElementById("shareIcon").classList.remove("hidden");
+}
 calcButton.addEventListener("click", calculateTransfers);
 resetButton.addEventListener("click", resetCalculation);
 downloadButton.addEventListener("click", downloadImage);
 tabMain.addEventListener("click", () => setView("main"));
 tabConfig.addEventListener("click", () => setView("config"));
+tabMore.addEventListener("click", () => setView("more"));
+helpSheetNext.addEventListener("click", () => {
+  if (helpStep < helpSteps.length - 1) {
+    helpStep += 1;
+    renderHelpStep();
+  } else {
+    dismissHelpSheet();
+  }
+});
+helpSheetBack.addEventListener("click", () => {
+  if (helpStep > 0) {
+    helpStep -= 1;
+    renderHelpStep();
+  }
+});
+helpSheetBackdrop.addEventListener("click", dismissHelpSheet);
+document.addEventListener("keydown", (e) => {
+  if (e.key === "Escape" && !helpSheet.classList.contains("hidden")) {
+    dismissHelpSheet();
+  }
+});
 peopleAddButton.addEventListener("click", addPersonRow);
 configAddButton.addEventListener("click", addConfigRow);
 configSaveButton.addEventListener("click", saveConfigFromUI);
@@ -805,6 +878,13 @@ function roundRect(ctx, x, y, w, h, r) {
   ctx.lineTo(x, y + r);
   ctx.quadraticCurveTo(x, y, x + r, y);
   ctx.closePath();
+}
+
+function canShareResultImage() {
+  if (!window.matchMedia("(pointer: coarse)").matches) return false;
+  if (!navigator.canShare) return false;
+  const probe = new File([""], "budget.png", { type: "image/png" });
+  return navigator.canShare({ files: [probe] });
 }
 
 function downloadImage() {
@@ -955,12 +1035,7 @@ function downloadImage() {
 
   canvas.toBlob(async (blob) => {
     const file = new File([blob], "budget.png", { type: "image/png" });
-    const isTouch = window.matchMedia("(pointer: coarse)").matches;
-    if (
-      isTouch &&
-      navigator.canShare &&
-      navigator.canShare({ files: [file] })
-    ) {
+    if (canShareResultImage() && navigator.canShare({ files: [file] })) {
       try {
         await navigator.share({ files: [file], title: "ProRata-Fordeleren" });
         return;
