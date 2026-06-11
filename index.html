@@ -125,7 +125,7 @@
                 line-height: 1;
                 text-align: center;
                 transform-origin: 50% 50%;
-                animation: flyMoney 1.5s ease-in-out infinite;
+                animation: flyMoney 1.5s cubic-bezier(0.75, 0, 0.25, 1) infinite;
             }
             .loading-overlay__text {
                 margin-top: 1rem;
@@ -154,10 +154,13 @@
                 will-change: transform, opacity;
             }
             @keyframes flyMoney {
-                from {
+                0% {
                     transform: rotate(0deg);
                 }
-                to {
+                55% {
+                    transform: rotate(360deg);
+                }
+                100% {
                     transform: rotate(360deg);
                 }
             }
@@ -677,8 +680,7 @@
                             Tryk på Beregn for at se, hvor meget hver person
                             skal sætte ind på hver kategori.<br /><br />
                             Det, der er tilbage af indkomsten, er
-                            <strong class="text-emerald-600">Overskud</strong>
-                            — penge til frit forbrug.<br /><br />
+                            <strong class="text-emerald-600">Overskud</strong>.<br /><br />
                             Resultatet kan gemmes eller deles som billede.
                         </p>
                     </div>
