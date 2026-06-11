@@ -1,7 +1,8 @@
-const CACHE_NAME = "offline-cache-v61";
+const CACHE_NAME = "offline-cache-v65";
 const OFFLINE_URLS = [
     "/ProRata-Fordeleren/",
     "/ProRata-Fordeleren/favicon.png",
+    "/ProRata-Fordeleren/happyman.svg",
     "/ProRata-Fordeleren/index.html",
     "/ProRata-Fordeleren/icon-192x192.png",
     "/ProRata-Fordeleren/icon-512x512.png",

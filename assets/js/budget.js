@@ -97,6 +97,7 @@ const welcomeLocalButton = document.getElementById("welcomeLocalButton");
 const incomeInputs = document.getElementById("incomeInputs");
 const budgetContent = document.getElementById("budgetContent");
 const mainEmptyState = document.getElementById("mainEmptyState");
+const mainHint = document.getElementById("mainHint");
 const overskudSection = document.getElementById("overskudSection");
 const resultCards = document.getElementById("resultCards");
 const totalForbrug = document.getElementById("totalForbrug");
@@ -449,9 +450,11 @@ function setShortfallVisible(visible) {
 function refreshResultsVisibility() {
   const ready = config.people.length > 0 && config.spending.length > 0;
   const showResults = ready && lastResult != null && currentShortfall === 0;
+  const showHint = ready && lastResult == null && currentShortfall === 0;
   resultCards.classList.toggle("hidden", !showResults);
   overskudSection.classList.toggle("hidden", !showResults);
   downloadButton.classList.toggle("hidden", !showResults);
+  mainHint.classList.toggle("hidden", !showHint);
 }
 
 function refreshCalcAvailability() {

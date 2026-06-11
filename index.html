@@ -398,7 +398,7 @@
                     bruge ProRata-Fordeleren
                 </div>
 
-                <div id="budgetContent" class="order-6 space-y-3 sm:order-1">
+                <div id="budgetContent" class="order-6 space-y-3">
                     <div id="incomeInputs"></div>
                     <div class="flex gap-3">
                         <button
@@ -423,7 +423,7 @@
 
                 <div
                     id="calcWarning"
-                    class="order-5 hidden rounded-2xl border border-amber-200 bg-amber-50 p-4 text-sm text-amber-900 sm:order-2"
+                    class="order-5 hidden rounded-2xl border border-amber-200 bg-amber-50 p-4 text-sm text-amber-900"
                     role="status"
                 >
                     <strong>Indkomsten er ikke stor nok til at dække alle kategorier.</strong>
@@ -433,11 +433,31 @@
                     ></div>
                 </div>
 
-                <div id="resultCards" class="order-1 space-y-3 sm:order-3"></div>
+                <div
+                    id="mainHint"
+                    class="hidden order-1 rounded-2xl border border-slate-200 bg-white p-5 shadow-sm"
+                >
+                    <div class="flex items-center gap-4">
+                        <img
+                            src="/ProRata-Fordeleren/happyman.svg"
+                            alt=""
+                            aria-hidden="true"
+                            class="h-20 w-auto shrink-0 sm:h-24"
+                        />
+                        <p class="text-sm leading-relaxed text-slate-600">
+                            Her vises beregningen for hvem der skal overføre
+                            hvor meget til hvilke kategorier.<br /><br />
+                            Men først skal du indtaste indkomster i felterne
+                            nedenfor og trykke <strong>Beregn</strong>.
+                        </p>
+                    </div>
+                </div>
+
+                <div id="resultCards" class="order-1 space-y-3"></div>
 
                 <section
                     id="overskudSection"
-                    class="order-2 rounded-2xl border border-slate-200 bg-white p-5 shadow-sm sm:order-4"
+                    class="order-2 rounded-2xl border border-slate-200 bg-white p-5 shadow-sm"
                 >
                     <div class="flex items-center justify-between">
                         <h2 class="text-base font-semibold text-emerald-600">
@@ -453,7 +473,7 @@
 
                 <button
                     id="downloadButton"
-                    class="hidden middle none center order-3 h-11 w-full rounded-lg border border-slate-200 bg-white px-6 font-sans text-sm font-medium text-slate-700 shadow-sm transition-all hover:bg-slate-50 focus:opacity-90 active:opacity-90 sm:order-5 sm:mt-3"
+                    class="hidden middle none center order-3 h-11 w-full rounded-lg border border-slate-200 bg-white px-6 font-sans text-sm font-medium text-slate-700 shadow-sm transition-all hover:bg-slate-50 focus:opacity-90 active:opacity-90"
                     data-ripple-dark="true"
                 >
                     <span
