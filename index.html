@@ -125,7 +125,7 @@
                 line-height: 1;
                 text-align: center;
                 transform-origin: 50% 50%;
-                animation: flyMoney 1.5s linear infinite;
+                animation: flyMoney 1.5s ease-in-out infinite;
             }
             .loading-overlay__text {
                 margin-top: 1rem;
@@ -138,9 +138,15 @@
                 justify-content: center;
                 gap: 0.35em;
             }
+            .loading-overlay__prefix {
+                width: 7em;
+                text-align: right;
+                white-space: nowrap;
+            }
             .loading-overlay__verb-slot {
-                width: 8em;
+                width: 7em;
                 text-align: left;
+                white-space: nowrap;
                 overflow: visible;
             }
             #loadingVerb {
