@@ -725,27 +725,32 @@ function refreshMainViewVisibility() {
 }
 
 async function handleAuthChange(user) {
-  if (user) clearLocalMode();
-  currentUser = user;
-  updateAuthUI();
-  if (user) {
-    const remote = await loadRemoteConfig(user.uid);
-    if (remote) {
-      applyLoadedConfig(remote);
-    } else {
-      const local = loadLocalConfig();
-      if (local) {
-        config = local;
-        await saveRemoteConfig(user.uid, config);
+  try {
+    if (user) clearLocalMode();
+    currentUser = user;
+    updateAuthUI();
+    if (user) {
+      const remote = await loadRemoteConfig(user.uid);
+      if (remote) {
+        applyLoadedConfig(remote);
+      } else {
+        const local = loadLocalConfig();
+        if (local) {
+          config = local;
+          await saveRemoteConfig(user.uid, config);
+        }
+        applyLoadedConfig(local);
       }
-      applyLoadedConfig(local);
+    } else if (isLocalMode()) {
+      applyLoadedConfig(loadLocalConfig());
+    } else {
+      applyLoadedConfig(null);
     }
-  } else if (isLocalMode()) {
-    applyLoadedConfig(loadLocalConfig());
-  } else {
-    applyLoadedConfig(null);
+  } catch (err) {
+    console.error("Auth change handling failed", err);
+  } finally {
+    setView(determineView());
   }
-  setView(determineView());
 }
 
 function chooseLocalMode() {

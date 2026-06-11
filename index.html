@@ -125,7 +125,7 @@
                 line-height: 1;
                 text-align: center;
                 transform-origin: 50% 50%;
-                animation: flyMoney 1.8s ease-in-out infinite;
+                animation: flyMoney 1.5s linear infinite;
             }
             .loading-overlay__text {
                 margin-top: 1rem;
@@ -133,6 +133,15 @@
                 font-weight: 500;
                 color: #64748b;
                 letter-spacing: 0.02em;
+                display: flex;
+                align-items: baseline;
+                justify-content: center;
+                gap: 0.35em;
+            }
+            .loading-overlay__verb-slot {
+                width: 8em;
+                text-align: left;
+                overflow: visible;
             }
             #loadingVerb {
                 display: inline-block;
@@ -159,7 +168,10 @@
             <div class="loading-overlay__inner">
                 <div class="loading-overlay__emoji">💸</div>
                 <p class="loading-overlay__text">
-                    ProRata is <span id="loadingVerb">working</span>
+                    <span class="loading-overlay__prefix">ProRata is</span>
+                    <span class="loading-overlay__verb-slot">
+                        <span id="loadingVerb">working</span>
+                    </span>
                 </p>
             </div>
         </div>
@@ -195,41 +207,39 @@
                 }
 
                 function swapTo(el, target) {
-                    if (typeof el.animate === "function") {
-                        el.animate(
+                    if (typeof el.animate !== "function") {
+                        el.textContent = target;
+                        return;
+                    }
+                    var out = el.animate(
+                        [
+                            { opacity: 1, transform: "translateY(0)" },
+                            { opacity: 0, transform: "translateY(-18px)" },
+                        ],
+                        {
+                            duration: 280,
+                            easing: "cubic-bezier(0.4, 0, 1, 1)",
+                            fill: "forwards",
+                        },
+                    );
+                    out.onfinish = function () {
+                        el.textContent = target;
+                        var inAnim = el.animate(
                             [
-                                {
-                                    opacity: 1,
-                                    transform: "translateY(0)",
-                                    offset: 0,
-                                },
-                                {
-                                    opacity: 0,
-                                    transform: "translateY(-10px)",
-                                    offset: 0.45,
-                                },
-                                {
-                                    opacity: 0,
-                                    transform: "translateY(10px)",
-                                    offset: 0.55,
-                                },
-                                {
-                                    opacity: 1,
-                                    transform: "translateY(0)",
-                                    offset: 1,
-                                },
+                                { opacity: 0, transform: "translateY(18px)" },
+                                { opacity: 1, transform: "translateY(0)" },
                             ],
                             {
-                                duration: 600,
-                                easing: "cubic-bezier(0.4, 0, 0.2, 1)",
+                                duration: 280,
+                                easing: "cubic-bezier(0, 0, 0.2, 1)",
+                                fill: "forwards",
                             },
                         );
-                        setTimeout(function () {
-                            el.textContent = target;
-                        }, 300);
-                    } else {
-                        el.textContent = target;
-                    }
+                        inAnim.onfinish = function () {
+                            out.cancel();
+                            inAnim.cancel();
+                        };
+                    };
                 }
 
                 function tick() {
@@ -242,7 +252,7 @@
                 setInterval(tick, 1500);
             })();
         </script>
-        <main class="mx-auto max-w-lg px-4 pt-6 pb-24 sm:pb-6">
+        <main class="mx-auto max-w-lg px-4 pt-6 pb-28 sm:pb-6">
             <nav
                 id="topNav"
                 class="fixed inset-x-0 bottom-0 z-40 hidden grid-cols-3 border-t border-slate-200 bg-white pb-[env(safe-area-inset-bottom)] shadow-[0_-2px_8px_rgba(15,23,42,0.06)] sm:static sm:z-auto sm:mb-6 sm:border-b sm:border-t-0 sm:bg-transparent sm:pb-0 sm:shadow-none"
@@ -250,7 +260,7 @@
                 <button
                     id="tabMain"
                     type="button"
-                    class="flex flex-col items-center justify-center gap-0.5 border-transparent py-2 text-center text-[11px] font-medium text-slate-500 transition hover:text-slate-900 sm:flex-row sm:border-b-2 sm:py-3 sm:text-sm"
+                    class="flex flex-col items-center justify-center gap-0.5 border-transparent py-3.5 text-center text-[11px] font-medium text-slate-500 transition hover:text-slate-900 sm:flex-row sm:border-b-2 sm:py-3 sm:text-sm"
                 >
                     <svg
                         xmlns="http://www.w3.org/2000/svg"
@@ -281,7 +291,7 @@
                 <button
                     id="tabConfig"
                     type="button"
-                    class="flex flex-col items-center justify-center gap-0.5 border-transparent py-2 text-center text-[11px] font-medium text-slate-500 transition hover:text-slate-900 sm:flex-row sm:border-b-2 sm:py-3 sm:text-sm"
+                    class="flex flex-col items-center justify-center gap-0.5 border-transparent py-3.5 text-center text-[11px] font-medium text-slate-500 transition hover:text-slate-900 sm:flex-row sm:border-b-2 sm:py-3 sm:text-sm"
                 >
                     <svg
                         xmlns="http://www.w3.org/2000/svg"
@@ -306,7 +316,7 @@
                 <button
                     id="tabMore"
                     type="button"
-                    class="flex flex-col items-center justify-center gap-0.5 border-transparent py-2 text-center text-[11px] font-medium text-slate-500 transition hover:text-slate-900 sm:flex-row sm:border-b-2 sm:py-3 sm:text-sm"
+                    class="flex flex-col items-center justify-center gap-0.5 border-transparent py-3.5 text-center text-[11px] font-medium text-slate-500 transition hover:text-slate-900 sm:flex-row sm:border-b-2 sm:py-3 sm:text-sm"
                 >
                     <svg
                         xmlns="http://www.w3.org/2000/svg"
@@ -562,24 +572,6 @@
                 <div
                     class="flex min-h-[calc(100dvh-7.5rem)] flex-col justify-end gap-4 sm:min-h-0 sm:justify-start"
                 >
-                <div
-                    class="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm"
-                >
-                    <h3
-                        class="mb-2 text-xs font-semibold uppercase tracking-wide text-slate-400"
-                    >
-                        Sådan virker det
-                    </h3>
-                    <p class="text-sm leading-relaxed text-slate-600">
-                        Hver person bidrager til kategorierne.<br />
-                        <strong>Delt</strong> fordeles efter
-                        indkomstforhold.<br />
-                        <strong>Pr. person</strong> giver hver person op til
-                        samme beløb.<br />
-                        Det, der er tilbage, bliver til Overskud.
-                    </p>
-                </div>
-
                 <div
                     class="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm"
                 >
